@@ -1,0 +1,835 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Road trip games for the UK and Europe: landmarks to spot, quizzes, driving rules and bingo.">
+<meta name="theme-color" content="#0E6E78">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Window Seat">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;-webkit-text-size-adjust:100%}img{max-width:100%}</style>
+<title>Window Seat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Nunito+Sans:opsz,wght@6..12,400;6..12,700&family=Overpass+Mono:wght@600&display=swap">
+<style>
+/* Window Seat: a car window at golden hour. Teal glass, marigold sun, rounded window corners; road signs and plates stay true to life. */
+/* Layout: one column of panels under a sticky header. Sticky header with plate-style tabs; one column of panels; signs and plates as the visual language. */
+:root{
+  --bg:#EEF4F3; --surface:#FFFFFF; --surface-2:#E5EEED; --ink:#15242A; --muted:#4F6369; --line:#CFDDDB;
+  --sign:#0E6E78; --sign-ink:#FFFFFF; --plate:#FFB627; --plate-ink:#15242A; --ring:#D2232A; --go:#2B8A4B;
+  --hdr:#0E6E78; --hdr-ink:#FFFFFF; --sun:#FFB627; --eu:#1D4C9A;
+  --signface:#FFFFFF; --signtext:#111111;
+  --display:"Bricolage Grotesque","Avenir Next","Trebuchet MS",sans-serif;
+  --body:"Nunito Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Overpass Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0C1719; --surface:#142326; --surface-2:#1B2E31; --ink:#E4F0EE; --muted:#92AAAC; --line:#28403F;
+  --sign:#45BCC6; --sign-ink:#06201F; --plate:#FFC24A; --plate-ink:#15242A; --ring:#FF5A5F; --go:#5CCB80;
+  --hdr:#103A3F; --hdr-ink:#FFFFFF; --sun:#FFC24A; --eu:#2F5FB3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1719; --surface:#142326; --surface-2:#1B2E31; --ink:#E4F0EE; --muted:#92AAAC; --line:#28403F;
+  --sign:#45BCC6; --sign-ink:#06201F; --plate:#FFC24A; --plate-ink:#15242A; --ring:#FF5A5F; --go:#5CCB80;
+  --hdr:#103A3F; --hdr-ink:#FFFFFF; --sun:#FFC24A; --eu:#2F5FB3; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--hdr)}
+.wrap{max-width:980px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--hdr);color:var(--hdr-ink);border-radius:0 0 22px 22px}
+header .wrap{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;padding-block:12px}
+.brand{display:flex;align-items:center;gap:10px;margin-right:auto}
+.brand svg{width:40px;height:40px;flex:none}
+.brand h1{font-family:var(--display);font-weight:800;font-size:1.75rem;letter-spacing:-.03em;margin:0;line-height:1}
+.brand span{font-family:var(--body);font-size:.85rem;opacity:.85}
+nav{display:flex;gap:6px;flex-wrap:wrap}
+nav button{font-family:var(--display);font-weight:800;font-size:.95rem;border:2px solid rgba(255,255,255,.45);background:transparent;color:var(--hdr-ink);border-radius:999px;padding:5px 14px;cursor:pointer}
+nav button[aria-selected="true"]{background:var(--sun);color:#15242A;border-color:var(--sun)}
+nav button:focus-visible,button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--plate);outline-offset:2px}
+main{padding-block:22px 48px}
+section[role="tabpanel"]{display:grid;grid-template-columns:minmax(0,1fr);gap:20px}
+h2{font-family:var(--display);font-weight:900;font-size:1.6rem;line-height:1.15;margin:0;text-wrap:balance}
+h3{font-family:var(--display);font-weight:800;font-size:1.1rem;margin:0}
+.lede{color:var(--muted);margin:4px 0 0;max-width:65ch}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+.eyebrow{font-family:var(--display);font-weight:800;font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.btn{font-family:var(--display);font-weight:800;font-size:.95rem;border:0;border-radius:999px;padding:8px 18px;background:var(--sign);color:var(--sign-ink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+
+/* Plate chips: a mini number plate with the EU-style blue band */
+.plates{display:flex;flex-wrap:wrap;gap:8px}
+.plate{display:inline-flex;align-items:stretch;border:2px solid var(--ink);border-radius:5px;overflow:hidden;background:var(--surface);color:var(--ink);cursor:pointer;font:inherit;padding:0;min-height:36px}
+.plate .code{background:var(--eu);color:#fff;font-family:var(--mono);font-size:.78rem;display:grid;place-items:center;padding:0 7px;min-width:38px}
+.plate .nm{font-family:var(--display);font-weight:700;padding:6px 10px}
+.plate[aria-pressed="true"]{background:var(--plate);color:var(--plate-ink)}
+.plate[aria-pressed="true"] .nm::after{content:" ✓"}
+
+/* Checklist */
+.check{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.check li label{display:grid;grid-template-columns:24px 1fr;gap:10px;padding:9px 6px;border-radius:6px;cursor:pointer}
+.check li label:hover{background:var(--surface-2)}
+.check input{width:20px;height:20px;margin:2px 0 0;accent-color:var(--go)}
+.check .why{display:block;color:var(--muted);font-size:.9rem}
+.check input:checked + span{color:var(--muted)}
+.check input:checked + span b{text-decoration:line-through}
+.tag{font-family:var(--mono);font-size:.7rem;background:var(--eu);color:#fff;border-radius:3px;padding:1px 5px;margin-left:6px;vertical-align:2px}
+.progress{height:8px;background:var(--surface-2);border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+.progress i{display:block;height:100%;background:var(--go);width:0;transition:width .3s}
+
+/* Rules */
+.rules-grid{display:grid;grid-template-columns:220px 1fr;gap:20px;align-items:start}
+.clist{display:grid;gap:4px;position:sticky;top:90px}
+.clist button{display:flex;gap:10px;align-items:center;text-align:left;border:0;background:transparent;color:var(--ink);font:inherit;padding:7px 8px;border-radius:6px;cursor:pointer}
+.clist button .code{font-family:var(--mono);font-size:.75rem;background:var(--eu);color:#fff;border-radius:3px;padding:2px 0 1px;width:40px;text-align:center}
+.clist button[aria-current="true"]{background:var(--surface);box-shadow:inset 0 0 0 2px var(--sign)}
+.clist button .ontrip{margin-left:auto;white-space:nowrap;font-size:.7rem;color:var(--go);font-weight:700}
+select.cpick{display:none;font:inherit;padding:10px;border-radius:6px;border:2px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.chead{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between}
+.side{display:inline-flex;align-items:center;gap:8px;font-family:var(--display);font-weight:800;background:var(--plate);color:var(--plate-ink);padding:6px 14px;border-radius:999px}
+.signs{display:flex;flex-wrap:wrap;gap:18px 26px;margin-top:6px}
+.signs{align-items:start}
+.sign{display:grid;justify-items:center;align-content:start;gap:6px;text-align:center}
+.disc{width:84px;height:84px;border-radius:50%;background:var(--signface);border:11px solid var(--ring);display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:1.65rem;color:var(--signtext);letter-spacing:-.03em}
+.disc.nolimit{font-size:1rem}
+.sign small{color:var(--muted);font-size:.8rem;line-height:1.25;max-width:110px}
+.sign b{font-family:var(--display);font-weight:800;font-size:.85rem}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.fact{background:var(--surface-2);border-radius:8px;padding:12px 14px;min-width:0}
+.fact .eyebrow{margin-bottom:4px}
+.fact ul{margin:0;padding-left:18px}
+.fact li+li{margin-top:4px}
+.say{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--display);font-weight:800;font-size:1.15rem}
+.say span small{display:block;font-family:var(--body);font-weight:400;font-size:.8rem;color:var(--muted)}
+.note{font-size:.85rem;color:var(--muted)}
+.note a{color:var(--sign)}
+
+/* Games */
+.score{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.player{background:var(--surface-2);border-radius:8px;padding:10px;display:grid;gap:6px}
+.player input{font:inherit;font-family:var(--display);font-weight:800;border:0;border-bottom:2px dashed var(--line);background:transparent;color:var(--ink);padding:2px 0;width:100%}
+.player .pts{font-family:var(--display);font-weight:900;font-size:2rem;line-height:1;font-variant-numeric:tabular-nums}
+.player .row button{flex:1;padding:6px 0 4px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:grid;gap:6px;align-content:start}
+.card .age{font-family:var(--mono);font-size:.72rem;color:var(--muted)}
+.card p{margin:0}
+.generator{display:grid;gap:12px}
+.bigcall{font-family:var(--display);font-weight:900;font-size:clamp(1.3rem,4vw,1.9rem);line-height:1.2;min-height:2.4em;text-wrap:balance}
+.lettersplate{display:inline-flex;align-items:center;gap:0;border:3px solid #111;border-radius:6px;overflow:hidden;background:var(--plate)}
+.lettersplate .code{background:var(--eu);color:#fff;font-family:var(--mono);font-size:.8rem;padding:14px 8px}
+.lettersplate .txt{font-family:var(--mono);font-size:2.2rem;color:#111;padding:6px 18px 2px;letter-spacing:.12em}
+
+/* Bingo */
+.bingo{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;max-width:560px}
+.bingo button{aspect-ratio:1;max-width:100%;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:8px;font-family:var(--display);font-weight:800;font-size:clamp(.72rem,2.6vw,.95rem);line-height:1.15;padding:6px;cursor:pointer;display:grid;place-items:center;gap:2px;transition:transform .12s;overflow-wrap:anywhere;hyphens:auto}
+.bingo button .em{font-size:1.5em}
+.bingo button[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:#fff}
+.bingo button:active{transform:scale(.96)}
+.bingo.win button[aria-pressed="true"]{background:var(--plate);color:var(--plate-ink);border-color:var(--plate)}
+.banner{font-family:var(--display);font-weight:900;font-size:1.4rem;color:var(--go)}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:22px;overflow:hidden}
+.seg button{font:inherit;font-family:var(--display);font-weight:800;border:0;background:transparent;color:var(--ink);padding:7px 16px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--sign);color:var(--sign-ink)}
+.hunt{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px}
+.hunt .plate{width:100%}
+.hunt .plate .nm{font-size:.85rem;flex:1;text-align:left}
+
+/* Journey */
+details.plan{background:var(--surface);border:2px solid var(--sign);border-radius:18px}
+details.plan>summary{list-style:none;cursor:pointer;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:var(--display);font-weight:800;font-size:1.05rem;color:var(--sign)}
+details.plan>summary::-webkit-details-marker{display:none}
+details.plan>summary::after{content:"+";font-size:1.5rem;line-height:1}
+details.plan[open]>summary::after{content:"−"}
+.planbody{padding:0 18px 18px;display:grid;gap:16px}
+.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.field{display:grid;gap:4px;min-width:0}
+.field label,.flabel{font-family:var(--display);font-weight:800;font-size:.85rem;color:var(--muted)}
+.field input,.trav input{font:inherit;padding:10px 12px;border-radius:6px;border:2px solid var(--line);background:var(--surface-2);color:var(--ink);width:100%;min-width:0}
+.trav{display:grid;grid-template-columns:minmax(0,1fr) 84px auto;gap:8px;align-items:center}
+.travs{display:grid;gap:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:inherit;font-size:.9rem;border:2px solid var(--line);background:transparent;color:var(--ink);border-radius:99px;padding:5px 12px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--sign);border-color:var(--sign);color:var(--sign-ink)}
+.status{font-size:.95rem;color:var(--muted);min-height:1.5em}
+.status.err{color:var(--ring)}
+.jhead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:16px;align-items:start}
+.pointsbox{display:grid;gap:4px;justify-items:end;text-align:right;min-width:150px}
+.pointsbox .pts{font-family:var(--display);font-weight:900;font-size:2.4rem;line-height:1;font-variant-numeric:tabular-nums;color:var(--go)}
+.pointsbox .progress{width:150px}
+.pointsbox small{color:var(--muted);font-size:.8rem}
+.stopcard{display:grid;gap:12px;border-width:2px;border-color:var(--sign)}
+.bigname{font-family:var(--display);font-weight:900;font-size:clamp(1.5rem,5vw,2.2rem);line-height:1.1;text-wrap:balance;margin:0}
+.look{font-size:1.15rem;margin:0}
+.dyk{background:var(--plate);color:var(--plate-ink);border-radius:8px;padding:12px 14px;font-size:1.05rem}
+.dyk b{font-family:var(--display);font-weight:900;display:block;font-size:.8rem;letter-spacing:.08em;text-transform:uppercase}
+.stoplist{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.stoplist button{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;text-align:left;font:inherit;color:var(--ink);background:transparent;border:0;border-radius:6px;padding:8px 6px;cursor:pointer}
+.stoplist button:hover{background:var(--surface-2)}
+.stoplist button[aria-current="true"]{background:var(--surface-2);box-shadow:inset 3px 0 0 var(--sign)}
+.stoplist .n{font-family:var(--mono);font-size:.75rem;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--surface-2);border:2px solid var(--line)}
+.stoplist .ok .n{background:var(--go);border-color:var(--go);color:#fff}
+.stoplist .st{font-size:.8rem;color:var(--muted)}
+.qopts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px}
+.qopts button{font:inherit;font-family:var(--display);font-weight:800;font-size:1.05rem;text-align:left;border:2px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;padding:12px 14px;cursor:pointer}
+.qopts button.right{background:var(--go);border-color:var(--go);color:#fff}
+.qopts button.wrong{border-color:var(--ring);color:var(--ring)}
+.qopts button:disabled{cursor:default}
+.ispy{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ispy button{width:100%;display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:10px;align-items:center;text-align:left;font:inherit;font-size:1.05rem;color:var(--ink);background:var(--surface);border:2px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer}
+.ispy button[aria-pressed="true"]{border-color:var(--go);color:var(--muted)}
+.ispy .box{width:22px;height:22px;border-radius:5px;border:2px solid var(--line);display:grid;place-items:center;font-weight:700}
+.ispy button[aria-pressed="true"] .box{background:var(--go);border-color:var(--go);color:#fff}
+.ispy .pt{font-family:var(--mono);font-size:.75rem;color:var(--go)}
+.phr{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.phr div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.phr b{display:block;font-family:var(--display);font-weight:900;font-size:1.2rem}
+.phr span{color:var(--muted)}
+.book{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.rl{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;display:grid;justify-items:center;gap:4px;text-align:center}
+.rl svg{width:84px;height:84px}
+.rl b{font-family:var(--display);font-weight:800}
+.rl small{color:var(--muted);font-size:.78rem}
+.rl.locked svg .bodyfill{fill:var(--surface-2)}
+.rl.locked{opacity:.75}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 16px 10px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.3);max-width:calc(100% - 32px);font-family:var(--display);font-weight:800}
+.toast svg{width:52px;height:52px;flex:none}
+@media (max-width:720px){
+  .jhead{grid-template-columns:minmax(0,1fr)}
+  .pointsbox{justify-items:start;text-align:left}
+
+  .rules-grid{grid-template-columns:minmax(0,1fr)}
+  .clist{display:none}
+  select.cpick{display:block}
+  .brand span{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<header>
+  <div class="wrap">
+    <div class="brand"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 30 Q5 8 22 7 L33 7 Q36 7 36 10 L36 30 Q36 33 33 33 L8 33 Q5 33 5 30Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="26" cy="17" r="5" fill="var(--sun)"/><path d="M9 29 Q18 22 34 25" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg><h1>Window Seat</h1><span>Road trip games for the UK &amp; Europe</span></div>
+    <nav role="tablist" aria-label="Sections">
+      <button role="tab" id="t-journey" aria-controls="p-journey" data-tab="journey">Journey</button>
+      <button role="tab" id="t-trip" aria-controls="p-trip" data-tab="trip">Checklist</button>
+      <button role="tab" id="t-rules" aria-controls="p-rules" data-tab="rules">Rules</button>
+      <button role="tab" id="t-games" aria-controls="p-games" data-tab="games">Games</button>
+      <button role="tab" id="t-spot" aria-controls="p-spot" data-tab="spot">Spotting</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <!-- JOURNEY -->
+  <section role="tabpanel" id="p-journey" aria-labelledby="t-journey" hidden>
+    <div class="panel" style="display:grid;gap:10px">
+      <span class="eyebrow">Ready-made journeys</span>
+      <div class="chips" id="readyMade"></div>
+    </div>
+    <details class="plan" id="plan">
+      <summary>Plan a new journey</summary>
+      <form class="planbody" id="planForm">
+        <p class="lede" style="margin:0">Tell Window Seat where you're going and who's in the car. It builds landmarks to spot, Did You Know facts, a quiz for each age and route bingo.</p>
+        <div class="fields">
+          <div class="field"><label for="jFrom">From</label><input id="jFrom" required placeholder="Leeds" autocomplete="off"></div>
+          <div class="field"><label for="jTo">To</label><input id="jTo" required placeholder="Disneyland Paris" autocomplete="off"></div>
+          <div class="field"><label for="jVia">Going via (optional)</label><input id="jVia" placeholder="Eurotunnel, M6" autocomplete="off"></div>
+        </div>
+        <div style="display:grid;gap:8px">
+          <span class="flabel">Who's playing</span>
+          <div class="travs" id="travs"></div>
+          <div><button type="button" class="btn ghost" id="addTrav">Add a traveller</button></div>
+        </div>
+        <div style="display:grid;gap:8px">
+          <span class="flabel">They love…</span>
+          <div class="chips" id="interests"></div>
+        </div>
+        <div class="row"><button class="btn" id="buildBtn" type="submit">Build our adventure</button><button class="btn ghost" id="stopBtn" type="button" hidden>Stop</button></div>
+        <div class="status" id="planStatus" aria-live="polite"></div>
+      </form>
+    </details>
+    <div id="jPlay" style="display:grid;gap:16px"></div>
+  </section>
+
+  <!-- TRIP -->
+  <section role="tabpanel" id="p-trip" aria-labelledby="t-trip">
+    <div>
+      <h2>Where are we driving?</h2>
+      <p class="lede">Tap every country on the route. The checklist below adds whatever each one needs, and the Rules tab highlights them.</p>
+    </div>
+    <div class="panel"><div class="plates" id="routePlates"></div></div>
+    <div class="panel" style="display:grid;gap:12px">
+      <div class="row" style="justify-content:space-between">
+        <h3>Before we go</h3>
+        <span class="note" id="checkCount"></span>
+      </div>
+      <div class="progress"><i id="checkBar"></i></div>
+      <ul class="check" id="checklist"></ul>
+      <div class="row"><button class="btn ghost" id="resetChecks">Untick everything</button></div>
+    </div>
+    <p class="note">Rules change. Checked against UK government, AA and RAC guidance as of October 2026. Before a trip, confirm on <a href="https://www.gov.uk/driving-abroad" target="_blank" rel="noopener">gov.uk/driving-abroad</a> and the <a href="https://www.gov.uk/foreign-travel-advice" target="_blank" rel="noopener">foreign travel advice</a> page for each country.</p>
+  </section>
+
+  <!-- RULES -->
+  <section role="tabpanel" id="p-rules" aria-labelledby="t-rules" hidden>
+    <div class="rules-grid">
+      <div>
+        <div class="clist" id="clist"></div>
+        <label class="eyebrow" for="cpick" style="display:none" id="cpickLabel">Country</label>
+        <select class="cpick" id="cpick" aria-label="Country"></select>
+      </div>
+      <article class="panel" id="country" style="display:grid;gap:18px;min-width:0"></article>
+    </div>
+  </section>
+
+  <!-- GAMES -->
+  <section role="tabpanel" id="p-games" aria-labelledby="t-games" hidden>
+    <div>
+      <h2>Back-seat games</h2>
+      <p class="lede">No screens needed. Keep score here if you like.</p>
+    </div>
+    <div class="panel" style="display:grid;gap:12px">
+      <div class="row" style="justify-content:space-between"><h3>Scoreboard</h3>
+        <div class="row"><button class="btn ghost" id="addPlayer">Add player</button><button class="btn ghost" id="zeroScores">Reset scores</button></div></div>
+      <div class="score" id="score"></div>
+    </div>
+    <div class="cards">
+      <div class="panel generator">
+        <span class="eyebrow">Number plate phrases</span>
+        <div class="lettersplate" aria-live="polite"><span class="code">UK</span><span class="txt" id="letters">KLM</span></div>
+        <p class="note" style="margin:0">Make a phrase from the three letters, in order. KLM could be “Kind Llamas Munch”. Funniest answer wins a point.</p>
+        <div class="row"><button class="btn" id="newLetters">New letters</button></div>
+      </div>
+      <div class="panel generator">
+        <span class="eyebrow">Would you rather</span>
+        <div class="bigcall" id="wyr" aria-live="polite"></div>
+        <div class="row"><button class="btn" id="newWyr">Another one</button></div>
+      </div>
+    </div>
+    <div class="cards" id="gameCards"></div>
+  </section>
+
+  <!-- SPOTTING -->
+  <section role="tabpanel" id="p-spot" aria-labelledby="t-spot" hidden>
+    <div>
+      <h2>Spotting bingo</h2>
+      <p class="lede">Tap a square when someone spots it. A full row, column or diagonal is bingo.</p>
+    </div>
+    <div class="panel" style="display:grid;gap:14px">
+      <div class="row" style="justify-content:space-between">
+        <div class="seg" role="group" aria-label="Card type">
+          <button data-pool="route">This journey</button><button data-pool="uk">UK roads</button><button data-pool="eu">Europe</button>
+        </div>
+        <button class="btn" id="newCard">New card</button>
+      </div>
+      <div class="bingo" id="bingo"></div>
+      <div class="banner" id="bingoMsg" aria-live="polite"></div>
+    </div>
+    <div class="panel" style="display:grid;gap:12px">
+      <div class="row" style="justify-content:space-between">
+        <div><h3>Plate hunt</h3><p class="note" style="margin:2px 0 0">Spot the country code on a car's number plate or sticker. How many can you collect this trip?</p></div>
+        <span class="side" id="huntCount">0</span>
+      </div>
+      <div class="hunt" id="hunt"></div>
+      <div class="row"><button class="btn ghost" id="resetHunt">Start a new hunt</button></div>
+    </div>
+  </section>
+</main>
+
+<script>
+const store={get(k,d){try{const v=localStorage.getItem('roadlings:'+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem('roadlings:'+k,JSON.stringify(v))}catch(e){}}};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- Country data ---------- */
+const C=[
+ {id:'UK',name:'United Kingdom',side:'left',unit:'mph',limits:[[70,'Motorway','and dual carriageway'],[60,'Single carriageway',''],[30,'Built-up area','20 in many towns and most of Wales']],
+  alcohol:'80mg per 100ml blood in England, Wales and NI (0.8 g/l). Scotland is stricter at 50mg (0.5 g/l).',
+  kit:['Nothing extra is legally required for UK cars at home','Phone use only fully hands-free'],
+  roads:['Smart motorways: a red X over a lane means it is closed','Dartford Crossing (Dart Charge) must be paid online by midnight the next day','Low emission zones in London (ULEZ), Birmingham, Bristol, Glasgow, Edinburgh and others'],
+  hello:['Hello','Thank you'],lang:'English (Welsh: Shwmae / Diolch)',money:'Pound (£)',sos:'999 or 112'},
+ {id:'IRL',name:'Ireland',side:'left',unit:'km/h',limits:[[120,'Motorway',''],[100,'National road','80 on secondary national roads'],[50,'Town','60 on rural local roads']],
+  alcohol:'0.5 g/l. Learner, novice and professional drivers 0.2 g/l.',
+  kit:['UK sticker is not needed in Ireland','Bring your V5C and insurance details as usual'],
+  roads:['Signs are in km/h and kilometres','M50 Dublin toll is barrier-free: pay online by 8pm the next day','Other motorway tolls take cash or card at the booth'],
+  hello:['Dia dhuit','Go raibh maith agat'],lang:'Irish and English',money:'Euro (€)',sos:'112 or 999'},
+ {id:'F',name:'France',side:'right',unit:'km/h',limits:[[130,'Autoroute','110 in rain'],[80,'Main roads','some departments allow 90; 110 on dual carriageways'],[50,'Town','30 in many centres']],
+  alcohol:'0.5 g/l. Drivers with under 3 years’ experience 0.2 g/l.',
+  kit:['Warning triangle','Hi-vis vest for every occupant, reachable from inside the car','UK sticker','Headlamp beam deflectors','Crit’Air sticker for low emission zones (Paris, Lyon, Grenoble and more)','Winter tyres or snow chains in mountain areas, 1 November to 31 March'],
+  roads:['Péage tolls on most autoroutes: card works at most booths, or get a Bip&Go tag','Sat-navs must have speed camera alerts turned off; detectors are illegal','Priorité à droite: on some junctions traffic from the right has priority, watch for yellow diamond signs'],
+  hello:['Bonjour','Merci'],lang:'French',money:'Euro (€)',sos:'112'},
+ {id:'B',name:'Belgium',side:'right',unit:'km/h',limits:[[120,'Motorway',''],[90,'Main roads','70 in Flanders'],[50,'Town','30 across Brussels']],
+  alcohol:'0.5 g/l.',
+  kit:['Warning triangle','Hi-vis vest','UK sticker','Register for the Brussels, Antwerp and Ghent low emission zones before driving in (free online, foreign cars included)'],
+  roads:['Priority to the right applies unless signs say otherwise','Speed cameras are very common, including average speed sections'],
+  hello:['Bonjour / Hallo','Merci / Dank je'],lang:'French, Dutch and German',money:'Euro (€)',sos:'112'},
+ {id:'NL',name:'Netherlands',side:'right',unit:'km/h',limits:[[100,'Motorway','6am to 7pm; up to 130 at night where signed'],[80,'Main roads',''],[50,'Town','30 in many streets']],
+  alcohol:'0.5 g/l. Novice drivers (first 5 years) 0.2 g/l.',
+  kit:['Warning triangle recommended','UK sticker','Check zero-emission and environmental zones in city centres for older diesels'],
+  roads:['Cyclists are everywhere and often have priority: check mirrors before turning right','Some tunnels (Westerschelde) have tolls'],
+  hello:['Hallo','Dank je wel'],lang:'Dutch',money:'Euro (€)',sos:'112'},
+ {id:'L',name:'Luxembourg',side:'right',unit:'km/h',limits:[[130,'Motorway','110 in rain'],[90,'Main roads',''],[50,'Town','']],
+  alcohol:'0.5 g/l. Novice drivers 0.2 g/l.',
+  kit:['Warning triangle','Hi-vis vest recommended','UK sticker','Winter tyres when roads are icy or snowy'],
+  roads:['Fuel is usually cheaper than in neighbouring countries, worth filling up','No motorway tolls'],
+  hello:['Moien','Merci'],lang:'Luxembourgish, French and German',money:'Euro (€)',sos:'112'},
+ {id:'D',name:'Germany',side:'right',unit:'km/h',limits:[['none','Autobahn','130 recommended; many sections have signed limits'],[100,'Main roads',''],[50,'Town','']],
+  alcohol:'0.5 g/l. Zero for drivers under 21 or in their first 2 years.',
+  kit:['Warning triangle','First-aid kit and hi-vis vest recommended','UK sticker','Umweltplakette (green emissions sticker) for city Umweltzonen; order before you go','Winter tyres in wintry conditions'],
+  roads:['Rettungsgasse: in queues, form an emergency corridor between the left lane and the rest','Never overtake on the right on the autobahn','No car tolls on autobahns'],
+  hello:['Hallo','Danke'],lang:'German',money:'Euro (€)',sos:'112'},
+ {id:'CH',name:'Switzerland',side:'right',unit:'km/h',limits:[[120,'Motorway',''],[80,'Main roads',''],[50,'Town','']],
+  alcohol:'0.5 g/l. Novice drivers 0.1 g/l.',
+  kit:['Motorway e-vignette (CHF 40, calendar year): buy online at via.admin.ch','Warning triangle, kept within reach','UK sticker','Dipped headlights on at all times'],
+  roads:['Radar detectors are illegal and can be confiscated','Fines are high and speed cameras are strict','Mountain passes may close in winter: check before you set off'],
+  hello:['Grüezi / Bonjour','Merci'],lang:'German, French, Italian and Romansh',money:'Swiss franc (CHF)',sos:'112 or 117 (police)'},
+ {id:'A',name:'Austria',side:'right',unit:'km/h',limits:[[130,'Motorway',''],[100,'Main roads',''],[50,'Town','']],
+  alcohol:'0.5 g/l. Novice drivers 0.1 g/l.',
+  kit:['Digital motorway vignette: buy online at asfinag.at (1-day, 10-day, 2-month or annual)','Warning triangle','Hi-vis vest','First-aid kit','UK sticker','Winter tyres in wintry conditions, 1 November to 15 April'],
+  roads:['Some tunnels and Alpine roads (Brenner, Tauern, Grossglockner) have extra tolls','Form an emergency corridor in traffic jams'],
+  hello:['Servus','Danke'],lang:'German',money:'Euro (€)',sos:'112'},
+ {id:'I',name:'Italy',side:'right',unit:'km/h',limits:[[130,'Autostrada','110 in rain'],[90,'Main roads','110 on main dual carriageways'],[50,'Town','']],
+  alcohol:'0.5 g/l. Zero for drivers under 21 or with under 3 years’ experience.',
+  kit:['Warning triangle','Hi-vis vest','UK sticker','Winter equipment on many roads, 15 November to 15 April'],
+  roads:['ZTL zones: camera-enforced limited traffic zones in historic centres. Driving in by mistake brings a fine by post','Autostrada tolls: take a ticket, pay on exit by card or cash','Dipped headlights required outside towns'],
+  hello:['Ciao','Grazie'],lang:'Italian',money:'Euro (€)',sos:'112'},
+ {id:'E',name:'Spain',side:'right',unit:'km/h',limits:[[120,'Motorway',''],[90,'Main roads',''],[50,'Town','30 on single-lane streets']],
+  alcohol:'0.5 g/l. Drivers with under 2 years’ experience 0.3 g/l.',
+  kit:['Warning triangle (Spanish cars now use a V16 flashing beacon; a beacon is a good idea for you too)','Hi-vis vest, reachable from inside the car','UK sticker','Headlamp beam deflectors','Spare glasses if you wear them to drive'],
+  roads:['Many motorways are now toll-free; AP routes may still charge','Low emission zones in Madrid, Barcelona and other cities','Children under 135cm need a child seat'],
+  hello:['Hola','Gracias'],lang:'Spanish (and Catalan, Basque, Galician)',money:'Euro (€)',sos:'112'},
+ {id:'P',name:'Portugal',side:'right',unit:'km/h',limits:[[120,'Motorway',''],[90,'Main roads',''],[50,'Town','']],
+  alcohol:'0.5 g/l. Novice drivers 0.2 g/l.',
+  kit:['Warning triangle','Hi-vis vest','UK sticker','Plan for electronic-only tolls: register your card at the border (EASYToll) or rent a Via Verde tag'],
+  roads:['Some motorways have no booths at all; unpaid tolls come with fines','Speed cameras on main roads are common'],
+  hello:['Olá','Obrigado / Obrigada'],lang:'Portuguese',money:'Euro (€)',sos:'112'},
+ {id:'DK',name:'Denmark',side:'right',unit:'km/h',limits:[[130,'Motorway',''],[80,'Main roads',''],[50,'Town','']],
+  alcohol:'0.5 g/l.',
+  kit:['Warning triangle','UK sticker','Dipped headlights on at all times'],
+  roads:['Great Belt bridge and Øresund bridge (to Sweden) have tolls','Watch for cyclists on the inside when turning right'],
+  hello:['Hej','Tak'],lang:'Danish',money:'Danish krone (DKK)',sos:'112'},
+ {id:'N',name:'Norway',side:'right',unit:'km/h',limits:[[110,'Motorway','only where signed'],[80,'Main roads',''],[50,'Town','']],
+  alcohol:'0.2 g/l.',
+  kit:['Warning triangle','Hi-vis vest recommended','UK sticker','Dipped headlights on at all times','Winter tyres or chains when there is snow or ice'],
+  roads:['AutoPASS road tolls are camera-based: register your car with Epass24 to get the bill','Lots of ferries: build crossing times into the plan','Speeding fines are among the highest in Europe'],
+  hello:['Hei','Takk'],lang:'Norwegian',money:'Norwegian krone (NOK)',sos:'112'},
+ {id:'S',name:'Sweden',side:'right',unit:'km/h',limits:[[110,'Motorway','120 on some sections'],[70,'Main roads','unless signed otherwise'],[50,'Town','often 40 or 30']],
+  alcohol:'0.2 g/l.',
+  kit:['Warning triangle recommended','UK sticker','Dipped headlights on at all times','Winter tyres in winter conditions, 1 December to 31 March'],
+  roads:['Stockholm and Gothenburg congestion charges are billed to foreign cars through Epass24','Watch for elk and deer warnings, especially at dusk'],
+  hello:['Hej','Tack'],lang:'Swedish',money:'Swedish krona (SEK)',sos:'112'},
+ {id:'PL',name:'Poland',side:'right',unit:'km/h',limits:[[140,'Motorway','120 on expressways'],[90,'Main roads',''],[50,'Town','']],
+  alcohol:'0.2 g/l.',
+  kit:['Warning triangle','Fire extinguisher recommended','UK sticker','Dipped headlights on at all times'],
+  roads:['Some state-run motorway sections are paid through the e-TOLL app','Trams have priority in cities'],
+  hello:['Cześć','Dziękuję'],lang:'Polish',money:'Złoty (PLN)',sos:'112'},
+ {id:'CZ',name:'Czechia',side:'right',unit:'km/h',limits:[[130,'Motorway',''],[90,'Main roads',''],[50,'Town','']],
+  alcohol:'Zero. Any alcohol is an offence.',
+  kit:['Motorway e-vignette: buy online at edalnice.cz','Warning triangle','Hi-vis vest','First-aid kit','Spare bulbs','UK sticker','Dipped headlights on at all times','Winter tyres in wintry conditions, 1 November to 31 March'],
+  roads:['Trams have priority; you may not overtake a stopped tram where people are getting on'],
+  hello:['Ahoj','Děkuji'],lang:'Czech',money:'Czech koruna (CZK)',sos:'112'},
+ {id:'SLO',name:'Slovenia',side:'right',unit:'km/h',limits:[[130,'Motorway',''],[90,'Main roads',''],[50,'Town','']],
+  alcohol:'0.5 g/l. Zero for novice drivers.',
+  kit:['Motorway e-vinjeta: buy online at evinjeta.dars.si','Warning triangle','Hi-vis vest','UK sticker','Dipped headlights on at all times','Winter equipment 15 November to 15 March'],
+  roads:['The Karawanken tunnel from Austria has its own toll'],
+  hello:['Živjo','Hvala'],lang:'Slovene',money:'Euro (€)',sos:'112'},
+ {id:'HR',name:'Croatia',side:'right',unit:'km/h',limits:[[130,'Motorway',''],[90,'Main roads',''],[50,'Town','']],
+  alcohol:'0.5 g/l. Zero for drivers under 25.',
+  kit:['Warning triangle','Hi-vis vest','First-aid kit','Spare bulbs','UK sticker','Dipped headlights from the last Sunday in October to the last Sunday in March'],
+  roads:['Motorway tolls are being switched to barrier-free cameras; follow the signs for how to pay','Children under 12 must not sit in the front seat','Coast roads get very busy in July and August'],
+  hello:['Bok','Hvala'],lang:'Croatian',money:'Euro (€)',sos:'112'}
+];
+const byId=Object.fromEntries(C.map(c=>[c.id,c]));
+
+/* ---------- Tabs ---------- */
+const tabs=[...document.querySelectorAll('[role="tab"]')];
+function showTab(name){tabs.forEach(t=>{const on=t.dataset.tab===name;t.setAttribute('aria-selected',on);document.getElementById('p-'+t.dataset.tab).hidden=!on});store.set('tab',name);window.scrollTo(0,0)}
+tabs.forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.tab)));
+const hash=location.hash.slice(1);
+showTab(['journey','trip','rules','games','spot'].includes(hash)?hash:store.get('tab','journey'));
+
+/* ---------- Trip & checklist ---------- */
+let route=store.get('route',['UK','F']);
+let ticks=store.get('ticks',{});
+const BASE=[
+ ['licence','Photocard driving licence','No International Driving Permit needed in the EU, Switzerland or Norway with a UK photocard'],
+ ['v5c','V5C logbook (original)','Or a VE103 certificate if the car is hired or leased'],
+ ['ins','Insurance covers Europe','No green card needed in the EU, but check your policy and the dates'],
+ ['break','European breakdown cover',''],
+ ['pass','Passports valid','Issued under 10 years ago on the day you arrive, with 3+ months left after the day you leave the EU'],
+ ['ees','Ready for the EU Entry/Exit System','Fingerprints and a photo are taken at the border (Dover, Eurotunnel, ferry ports). Allow extra time'],
+ ['etias','Check whether ETIAS is live','The EU travel authorisation is due to start in late 2026. Check gov.uk before booking'],
+ ['ghic','GHIC for everyone','Free from the NHS. Get travel insurance too'],
+ ['roam','Phone roaming plan checked',''],
+ ['kids','Child seats suit every country','Rules differ by height and age'],
+ ['snacks','Snacks, water, sick bags, chargers','The essentials'],
+];
+function checklistItems(){
+  const items=[...BASE.map(([k,t,w])=>({k,t,w}))];
+  const abroad=route.filter(id=>id!=='UK');
+  if(!abroad.length) return items.slice(0,0).concat([{k:'uk-only',t:'Staying in the UK',w:'Add a country above to see what you need for driving abroad'}],items.filter(i=>['break','kids','snacks'].includes(i.k)));
+  const seen=new Map();
+  abroad.forEach(id=>byId[id].kit.forEach(t=>{const key='kit:'+t.split(/[,(:]/)[0].trim().toLowerCase();if(!seen.has(key))seen.set(key,{k:key,t,codes:[id]});else seen.get(key).codes.push(id)}));
+  return items.concat([...seen.values()]);
+}
+function renderRoute(){
+  $('#routePlates').innerHTML=C.map(c=>`<button class="plate" aria-pressed="${route.includes(c.id)}" data-id="${c.id}"><span class="code">${c.id}</span><span class="nm">${esc(c.name)}</span></button>`).join('');
+}
+function renderChecklist(){
+  const items=checklistItems();
+  $('#checklist').innerHTML=items.map(i=>`<li><label><input type="checkbox" id="ck-${esc(i.k).replace(/[^a-z0-9]/gi,'-')}" data-k="${esc(i.k)}" ${ticks[i.k]?'checked':''}><span><b>${esc(i.t)}</b>${i.codes?i.codes.map(c=>`<span class="tag">${c}</span>`).join(''):''}${i.w?`<span class="why">${esc(i.w)}</span>`:''}</span></label></li>`).join('');
+  const done=items.filter(i=>ticks[i.k]).length;
+  $('#checkCount').textContent=`${done} of ${items.length} done`;
+  $('#checkBar').style.width=(items.length?done/items.length*100:0)+'%';
+}
+$('#routePlates').addEventListener('click',e=>{const b=e.target.closest('.plate');if(!b)return;const id=b.dataset.id;route=route.includes(id)?route.filter(x=>x!==id):[...route,id];store.set('route',route);renderRoute();renderChecklist();renderClist()});
+$('#checklist').addEventListener('change',e=>{const k=e.target.dataset.k;if(!k)return;ticks[k]=e.target.checked;store.set('ticks',ticks);renderChecklist()});
+$('#resetChecks').addEventListener('click',()=>{ticks={};store.set('ticks',ticks);renderChecklist()});
+
+/* ---------- Rules ---------- */
+let current=store.get('country',route.find(id=>id!=='UK')||'F');
+function renderClist(){
+  $('#clist').innerHTML=C.map(c=>`<button data-id="${c.id}" aria-current="${c.id===current}"><span class="code">${c.id}</span>${esc(c.name)}${route.includes(c.id)?'<span class="ontrip">ON TRIP</span>':''}</button>`).join('');
+  $('#cpick').innerHTML=C.map(c=>`<option value="${c.id}" ${c.id===current?'selected':''}>${c.id} · ${esc(c.name)}${route.includes(c.id)?' (on trip)':''}</option>`).join('');
+}
+function mph(k){return Math.round(k*0.621371/5)*5}
+function renderCountry(){
+  const c=byId[current];
+  const signs=c.limits.map(([v,label,sub])=>{
+    const conv=c.unit==='km/h'&&v!=='none'?`about ${mph(v)} mph`:'';
+    return `<div class="sign"><div class="disc ${v==='none'?'nolimit':''}" aria-label="${v==='none'?'No general limit':v+' '+c.unit}">${v==='none'?'none':v}</div><b>${esc(label)}</b><small>${[conv,sub].filter(Boolean).map(esc).join('<br>')}</small></div>`}).join('');
+  $('#country').innerHTML=`
+   <div class="chead"><div><span class="eyebrow">Plate code ${c.id}</span><h2>${esc(c.name)}</h2></div>
+     <span class="side">Drive on the ${c.side}</span></div>
+   <div><span class="eyebrow">Speed limits for cars, in ${c.unit}</span><div class="signs">${signs}</div></div>
+   <div class="facts">
+     <div class="fact"><div class="eyebrow">Drink-drive limit</div>${esc(c.alcohol)}</div>
+     <div class="fact"><div class="eyebrow">Emergency number</div><span style="font-family:var(--display);font-weight:900;font-size:1.6rem">${esc(c.sos)}</span></div>
+     <div class="fact"><div class="eyebrow">Carry or buy</div><ul>${c.kit.map(k=>`<li>${esc(k)}</li>`).join('')}</ul></div>
+     <div class="fact"><div class="eyebrow">Good to know</div><ul>${c.roads.map(k=>`<li>${esc(k)}</li>`).join('')}</ul></div>
+     <div class="fact"><div class="eyebrow">Say it like a local</div><div class="say"><span>${esc(c.hello[0])}<small>Hello</small></span><span>${esc(c.hello[1])}<small>Thank you</small></span></div><div class="note" style="margin-top:6px">${esc(c.lang)}</div></div>
+     <div class="fact"><div class="eyebrow">Money</div>${esc(c.money)}</div>
+   </div>
+   <div class="row"><button class="btn ${route.includes(c.id)?'ghost':''}" id="toggleTrip">${route.includes(c.id)?'Remove from trip':'Add to trip'}</button></div>
+   <p class="note" style="margin:0">A summary, not legal advice. Check the <a href="https://www.gov.uk/foreign-travel-advice" target="_blank" rel="noopener">gov.uk travel advice</a> page for ${esc(c.name)} before you go.</p>`;
+  $('#toggleTrip').onclick=()=>{route=route.includes(c.id)?route.filter(x=>x!==c.id):[...route,c.id];store.set('route',route);renderRoute();renderChecklist();renderClist();renderCountry()};
+}
+function pick(id){current=id;store.set('country',id);renderClist();renderCountry()}
+$('#clist').addEventListener('click',e=>{const b=e.target.closest('button');if(b)pick(b.dataset.id)});
+$('#cpick').addEventListener('change',e=>pick(e.target.value));
+
+/* ---------- Games ---------- */
+let players=store.get('players',[{n:'Mum',p:0},{n:'Dad',p:0},{n:'Kid 1',p:0},{n:'Kid 2',p:0}]);
+function renderScore(){
+  $('#score').innerHTML=players.map((pl,i)=>`<div class="player"><input id="pl-${i}" aria-label="Player name" value="${esc(pl.n)}" data-i="${i}"><div class="pts">${pl.p}</div><div class="row"><button class="btn ghost" data-i="${i}" data-d="-1" aria-label="Minus one for ${esc(pl.n)}">−1</button><button class="btn" data-i="${i}" data-d="1" aria-label="Plus one for ${esc(pl.n)}">+1</button></div></div>`).join('');
+}
+$('#score').addEventListener('click',e=>{const b=e.target.closest('button[data-d]');if(!b)return;const pl=players[+b.dataset.i];pl.p=Math.max(0,pl.p+ +b.dataset.d);store.set('players',players);renderScore()});
+$('#score').addEventListener('input',e=>{if(e.target.dataset.i==null)return;players[+e.target.dataset.i].n=e.target.value;store.set('players',players)});
+$('#addPlayer').onclick=()=>{players.push({n:'Player '+(players.length+1),p:0});store.set('players',players);renderScore()};
+$('#zeroScores').onclick=()=>{players.forEach(p=>p.p=0);store.set('players',players);renderScore()};
+
+const LET='ABCDEFGHJKLMNOPRSTUVWY';
+function newLetters(){$('#letters').textContent=Array.from({length:3},()=>LET[Math.floor(Math.random()*LET.length)]).join('')}
+$('#newLetters').onclick=newLetters;
+
+const WYR=['…have a car that can fly or a car that can swim?','…only eat crisps for a week or only eat croissants for a week?','…be able to talk to cows or to seagulls?','…drive a double-decker bus or a tractor across France?','…sleep in a tent on a mountain or a boat on a lake?','…have a dog that sings or a cat that tells jokes?','…visit the Eiffel Tower or the Colosseum?','…never have to wait in traffic again or never have to stop for the toilet?','…have every car you see be bright pink or have every road be bumpy?','…speak every language in Europe or play every instrument?','…build a sandcastle as big as a house or a snowman as tall as a lorry?','…eat a whole pizza in Italy or a mountain of chips in Belgium?','…have a hot tub in the car or a slide out of the car?','…be a lorry driver for a day or a train driver for a day?','…ride a cable car up an Alp or a ferry across the sea?','…only be able to whisper or only be able to shout for the whole trip?','…have a sat-nav that tells jokes or one that sings directions?','…find a castle in your garden or a waterfall in your bedroom?','…swap places with the driver or with the dog?','…go on a road trip to the North Pole or to the desert?'];
+let wyrBag=[];
+function newWyr(){if(!wyrBag.length)wyrBag=[...WYR].sort(()=>Math.random()-.5);$('#wyr').textContent='Would you rather '+wyrBag.pop()}
+$('#newWyr').onclick=newWyr;
+
+const GAMES=[
+ ['I spy','All ages','One person picks something they can see and says “I spy with my little eye something beginning with…”. Everyone guesses. Use colours instead of letters for little ones.'],
+ ['Plate hunt','5+','Spot foreign country codes on number plates and stickers. Tick them off on the Spotting tab. Europe trips fill up fast.'],
+ ['The alphabet game','6+','Find every letter A to Z in order on signs, lorries and shop fronts. First to Z wins. Q and Z are the tough ones.'],
+ ['Twenty questions','6+','Someone thinks of an animal, a place or a person. Everyone else gets twenty yes-or-no questions to work it out.'],
+ ['Car cricket','7+','Each player bats in turn. Every car scores a run, a red car is a four, a lorry is a six. A pub with legs in its name (King’s Arms, Red Lion) means you’re out.'],
+ ['Who am I?','7+','Think of someone famous or someone in the family. Others ask yes-or-no questions. Fewest questions wins.'],
+ ['Count the cows','All ages','Two teams, one each side of the car. Count cows on your side. Pass a church or graveyard on your side and you lose all your cows.'],
+ ['The minister’s cat','7+','Go round the car: “The minister’s cat is an angry cat”, then “…a brave cat”, working through the alphabet. Miss your turn and you’re out.'],
+ ['Story chain','5+','Each person adds one sentence to a story. Bonus point for working in something you can see out of the window.'],
+ ['Guess the distance','8+','When a sign shows the distance to a town, everyone guesses how many minutes until you reach it. Closest wins a point.'],
+ ['Border bets','All ages','On European trips, guess the time you’ll cross each border, and the first thing you’ll spot in the new country.'],
+ ['Hum that tune','All ages','One person hums a song, the rest guess. Film and TV themes work well.'],
+];
+$('#gameCards').innerHTML=GAMES.map(([n,a,r])=>`<div class="card"><div class="row" style="justify-content:space-between"><h3>${esc(n)}</h3><span class="age">${esc(a)}</span></div><p>${esc(r)}</p></div>`).join('');
+
+/* ---------- Bingo ---------- */
+const POOLS={
+ uk:[['📮','Red post box'],['🍺','Pub sign'],['🐑','Sheep'],['🐄','Cows'],['🐎','Horse'],['🚜','Tractor'],['⛪','Church spire'],['🏰','Castle'],['💨','Wind turbine'],['🏕️','Caravan'],['🏍️','Motorbike'],['🚑','Ambulance'],['🚓','Police car'],['🚌','Double-decker bus'],['🌉','Bridge over the road'],['☕','Services sign'],['🟫','Brown tourist sign'],['📸','Speed camera'],['🔄','Roundabout'],['⛽','Petrol station'],['🅻','L plates'],['☎️','Red phone box'],['🌾','Combine harvester'],['🚛','Foreign lorry'],['🐕','Dog in a car'],['🚧','Traffic cones'],['🐦','Pheasant'],['🦅','Bird of prey'],['🏡','Thatched roof'],['🟡','Yellow car'],['🚐','Camper van'],['🚆','Train'],['🏞️','River'],['🎈','Hot air balloon'],['⚡','EV charger'],['🏴','Welsh or Scottish flag']],
+ eu:[['💳','Toll booth'],['🚛','Lorry from far away'],['🍇','Vineyard'],['🌻','Sunflower field'],['🏔️','Snowy mountain'],['🚇','Tunnel'],['⛴️','Ferry'],['🏰','Castle on a hill'],['🚴','Cyclist in Lycra'],['1️⃣','130 speed sign'],['🔤','Sign you can’t read'],['🅿️','Aire or rest area'],['🎨','Roundabout with art'],['🚐','Camper van'],['🇬🇧','Car with a UK sticker'],['🌉','Big bridge'],['💨','Wind turbine'],['🔔','Cow with a bell'],['🏞️','Lake'],['🏯','Château'],['🇪🇺','Border sign with EU stars'],['⚡','EV charger'],['🛵','Scooter'],['🚋','Tram'],['⛪','Cathedral'],['🫒','Olive trees'],['💜','Lavender field'],['🦅','Bird of prey'],['🚜','Tractor'],['📦','Roof box'],['🚲','Bikes on a car'],['🥖','Someone with a baguette'],['🚂','High-speed train'],['☀️','Solar farm'],['🛣️','Motorway in a new colour sign'],['🐐','Goats']]
+};
+let pool=store.get('pool','route'), card=store.get('card',null), marks=store.get('marks',[]);
+function poolItems(p){if(p!=='route')return POOLS[p];const b=(adv.bingo||[]).slice(0,30).map(t=>['',String(t)]);return b.length>=16?b:b.concat(POOLS.eu.slice(0,16-b.length))}
+const advKey=()=>String(adv.id||'example');
+function lines(){const L=[];for(let i=0;i<4;i++){L.push([0,1,2,3].map(j=>i*4+j));L.push([0,1,2,3].map(j=>j*4+i))}L.push([0,5,10,15],[3,6,9,12]);return L}
+function newCard(){const p=[...poolItems(pool).keys()].sort(()=>Math.random()-.5).slice(0,16);card={pool,ids:p,adv:advKey()};marks=[];store.set('card',card);store.set('marks',marks);renderBingo()}
+function renderBingo(){
+  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.pool===pool));
+  if(!card||card.pool!==pool||(pool==='route'&&card.adv!==advKey())){newCard();return}
+  const win=lines().some(l=>l.every(i=>marks.includes(i)));
+  const el=$('#bingo');el.classList.toggle('win',win);
+  el.innerHTML=card.ids.map((id,i)=>{const [em,t]=poolItems(pool)[id];return `<button aria-pressed="${marks.includes(i)}" data-i="${i}">${em?`<span class="em" aria-hidden="true">${em}</span>`:''}<span>${esc(t)}</span></button>`}).join('');
+  $('#bingoMsg').textContent=win?'Bingo! Shout it out.':marks.length?`${marks.length} spotted`:'';
+}
+$('#bingo').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;marks=marks.includes(i)?marks.filter(x=>x!==i):[...marks,i];store.set('marks',marks);renderBingo()});
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{pool=b.dataset.pool;store.set('pool',pool);renderBingo()});
+$('#newCard').onclick=newCard;
+
+const HUNT=[['UK','United Kingdom'],['IRL','Ireland'],['F','France'],['B','Belgium'],['NL','Netherlands'],['L','Luxembourg'],['D','Germany'],['CH','Switzerland'],['FL','Liechtenstein'],['A','Austria'],['I','Italy'],['RSM','San Marino'],['MC','Monaco'],['AND','Andorra'],['E','Spain'],['P','Portugal'],['DK','Denmark'],['N','Norway'],['S','Sweden'],['FIN','Finland'],['IS','Iceland'],['PL','Poland'],['CZ','Czechia'],['SK','Slovakia'],['H','Hungary'],['SLO','Slovenia'],['HR','Croatia'],['BIH','Bosnia'],['SRB','Serbia'],['MNE','Montenegro'],['AL','Albania'],['NMK','N. Macedonia'],['GR','Greece'],['BG','Bulgaria'],['RO','Romania'],['MD','Moldova'],['UA','Ukraine'],['LT','Lithuania'],['LV','Latvia'],['EST','Estonia'],['TR','Turkey'],['CY','Cyprus'],['M','Malta'],['GBM','Isle of Man'],['GBJ','Jersey'],['GBG','Guernsey']];
+let hunt=store.get('hunt',[]);
+function renderHunt(){
+  $('#hunt').innerHTML=HUNT.map(([c,n])=>`<button class="plate" aria-pressed="${hunt.includes(c)}" data-c="${c}"><span class="code">${c}</span><span class="nm">${esc(n)}</span></button>`).join('');
+  $('#huntCount').textContent=`${hunt.length} / ${HUNT.length}`;
+}
+$('#hunt').addEventListener('click',e=>{const b=e.target.closest('.plate');if(!b)return;const c=b.dataset.c;hunt=hunt.includes(c)?hunt.filter(x=>x!==c):[...hunt,c];store.set('hunt',hunt);renderHunt()});
+$('#resetHunt').onclick=()=>{hunt=[];store.set('hunt',hunt);renderHunt()};
+
+/* ---------- Journey ---------- */
+const EXAMPLE={example:true,id:'example',from:'London',to:'Paris',
+ title:'London to Paris under the sea',
+ summary:'Down through Kent, under the Channel on Le Shuttle, then south across northern France to Paris. About 6 hours with the crossing.',
+ stops:[
+  {name:'The QEII Bridge',when:'M25 at Dartford, about 40 minutes in',look:'A huge white bridge over the River Thames, held up by fans of cables',fact:'Cars heading south drive over the bridge and cars heading north go through tunnels underneath. It opened in 1991.'},
+  {name:'Oast houses',when:'Kent, along the M20',look:'Round or square brick towers with pointy white tops, like wizard hats',fact:'They were built to dry hops, a plant used to make beer. The white cowl on top turns with the wind to let the hot air out.'},
+  {name:'The North Downs',when:'Near Folkestone, before the tunnel',look:'Big green hills with white chalk showing through the grass',fact:'Chalk is made from the shells of tiny sea creatures that lived over 70 million years ago, when this land was under a warm sea.'},
+  {name:'Le Shuttle',when:'Folkestone terminal',look:'Drive the car onto a train with two floors',fact:'The Channel Tunnel is about 50 km long and around 38 km of it is under the sea. The crossing takes about 35 minutes.'},
+  {name:'Your first French road sign',when:'Leaving Calais',look:'A blue motorway sign with distances in kilometres, and a 130 speed sign',fact:'Like the UK, France uses blue signs for motorways and green for other main roads. But everything is in kilometres, and they drive on the right.'},
+  {name:'The péage',when:'On the motorway towards Arras',look:'A long row of toll booths right across the road',fact:'Most French motorways are paid for with tolls. You take a ticket when you join and pay when you leave, depending on how far you went.'},
+  {name:'Wind turbines',when:'Fields of northern France',look:'Giant white wind turbines turning slowly in the fields',fact:'Each blade can be 40 to 60 metres long. That is longer than a blue whale.'},
+  {name:'Brown picture signs',when:'All along the autoroute',look:'Brown signs with drawings of castles, cathedrals and memorials',fact:'They show what is interesting near the motorway. Around Arras they point to First World War memorials, like the Canadian memorial at Vimy Ridge.'},
+  {name:'Stade de France',when:'Coming into Paris at Saint-Denis',look:'An enormous stadium right beside the motorway',fact:'It was built for the 1998 football World Cup, which France won. About 80,000 people fit inside.'},
+  {name:'The Eiffel Tower',when:'Central Paris',look:'The famous iron tower poking up above the rooftops',fact:'It is 330 metres tall and was finished in 1889. It gets a fresh coat of paint about every seven years.'}
+ ],
+ quiz:[
+  {q:'Which side of the road do people drive on in France?',options:['Left','Right','Middle','Either'],answer:1,age:'4-6',why:'France, like most of Europe, drives on the right.'},
+  {q:'How do you say hello in French?',options:['Hola','Ciao','Bonjour','Hallo'],answer:2,age:'4-6',why:'Bonjour means good day. Hola is Spanish, Ciao is Italian.'},
+  {q:'What do we go through to get under the sea?',options:['A bridge','A tunnel','A lift','A river'],answer:1,age:'4-6',why:'The Channel Tunnel goes under the sea between England and France.'},
+  {q:'Which animal is a symbol of France?',options:['Lion','Eagle','Rooster','Bear'],answer:2,age:'7-10',why:'The Gallic rooster appears on French sports shirts and coins.'},
+  {q:'What is the French word for motorway?',options:['Autoroute','Autobahn','Highway','Strada'],answer:0,age:'7-10',why:'Autoroute. Autobahn is German.'},
+  {q:'About how tall is the Eiffel Tower?',options:['33 metres','100 metres','330 metres','1,000 metres'],answer:2,age:'7-10',why:'It is 330 metres, about as tall as an 81-storey building.'},
+  {q:'What is the money in France?',options:['Pound','Franc','Euro','Dollar'],answer:2,age:'7-10',why:'France has used the euro since 2002. Before that it was the franc.'},
+  {q:'What were oast houses built to dry?',options:['Hops','Washing','Bricks','Fish'],answer:0,age:'11+',why:'Hops are a plant used to make beer, and Kent grew lots of them.'},
+  {q:'In which year did the Channel Tunnel open?',options:['1974','1984','1994','2004'],answer:2,age:'11+',why:'It opened in 1994.'},
+  {q:'What is the top speed limit on French motorways in dry weather?',options:['110 km/h','120 km/h','130 km/h','150 km/h'],answer:2,age:'11+',why:'130 km/h, about 80 mph. It drops to 110 km/h in rain.'}
+ ],
+ ispy:['A car with a UK sticker','A lorry from Spain (E on the plate)','A sign saying Sortie (it means exit)','A blue and white Gendarmerie police car','A train on a bridge','A field full of cows','A sign for an Aire (rest stop)','Someone waving back at you'],
+ bingo:['Oast house','Wind turbine','Toll booth','Le Shuttle train','Sortie sign','130 speed sign','Church spire','Water tower','Cows','Tractor','Brown picture sign','Car with UK sticker','Foreign lorry','Big bridge','Rest stop (Aire)','Eiffel Tower','Cathedral','Field of crops','Motorbike','Camper van'],
+ phrases:[['Bonjour','Hello'],['Merci','Thank you'],['S’il vous plaît','Please'],['Au revoir','Goodbye'],['Où sont les toilettes ?','Where are the toilets?'],['Un croissant, s’il vous plaît','A croissant, please']]
+};
+const CORNWALL={example:true,id:'cornwall',from:'London',to:'Cornwall',
+ title:'Stones, moors and pasties',
+ summary:'Out of London on the M3, past Stonehenge on the A303, over Dartmoor and into Cornwall on the A30. About 5 to 6 hours.',
+ stops:[
+  {name:'Planes over the M25',when:'Near Heathrow, early on',look:'Big jets flying low as they come in to land',fact:'Heathrow is one of the busiest airports in the world. At busy times a plane lands about every minute or two.'},
+  {name:'Stonehenge',when:'A303 near Amesbury',look:'A ring of huge grey standing stones on the hill to your right as you head west',fact:'It is over 4,500 years old. Some of the smaller stones came all the way from the Preseli Hills in Wales.'},
+  {name:'Tank crossing signs',when:'A303 across Salisbury Plain',look:'Red triangle road signs with a picture of a tank',fact:'Salisbury Plain is used by the army for training, so tanks sometimes really do cross the road here.'},
+  {name:'Dartmoor tors',when:'A30 past Okehampton',look:'Piles of grey rock on top of the hills to the left',fact:'Tors are made of granite that formed deep underground from cooled molten rock. Wind and rain wore the soil away to leave the rocks poking out.'},
+  {name:'Dartmoor ponies',when:'On the moor',look:'Small, shaggy ponies grazing near the road',fact:'Ponies have lived on Dartmoor for thousands of years. They live outside all year round.'},
+  {name:'Welcome to Cornwall',when:'Crossing the River Tamar',look:'A sign saying Kernow a’gas dynergh',fact:'That is Cornish for welcome to Cornwall. The River Tamar makes almost the whole border between Devon and Cornwall.'},
+  {name:'Jamaica Inn',when:'A30 on Bodmin Moor',look:'An old stone inn right beside the road on the open moor',fact:'It is famous for smugglers’ stories and for a novel by Daphne du Maurier named after it.'},
+  {name:'Carland Cross wind farm',when:'A30 near Newquay turn-off',look:'A row of white wind turbines on the hill',fact:'It was one of the first wind farms in Britain, opened in the early 1990s.'},
+  {name:'Mine engine houses',when:'West Cornwall',look:'Tall stone chimneys and roofless stone buildings in the fields',fact:'They pumped water out of tin and copper mines. Cornwall’s old mining areas are a World Heritage Site.'},
+  {name:'St Michael’s Mount',when:'Near Penzance',look:'A castle on a rocky island just off the beach',fact:'At low tide you can walk to it along a stone causeway. At high tide you need a boat.'}
+ ],
+ quiz:[
+  {q:'What shape are the stones at Stonehenge arranged in?',options:['A square','A circle','A line','A star'],answer:1,age:'4-6',why:'They stand in a big circle.'},
+  {q:'What is inside a traditional Cornish pasty?',options:['Jam','Beef and vegetables','Fish fingers','Chocolate'],answer:1,age:'4-6',why:'A traditional pasty has beef, potato, swede and onion.'},
+  {q:'What animal roams free on Dartmoor?',options:['Zebras','Ponies','Kangaroos','Camels'],answer:1,age:'4-6',why:'Dartmoor ponies live on the moor all year.'},
+  {q:'Which river is the border between Devon and Cornwall?',options:['Thames','Severn','Tamar','Avon'],answer:2,age:'7-10',why:'The River Tamar.'},
+  {q:'What is a tor?',options:['A type of tree','A rocky hilltop','A kind of boat','A Cornish cake'],answer:1,age:'7-10',why:'A tor is a pile of rock on top of a hill.'},
+  {q:'What does Kernow mean?',options:['Cornwall','Hello','Beach','Sea'],answer:0,age:'7-10',why:'Kernow is the Cornish name for Cornwall.'},
+  {q:'Which colours are on the flag of Cornwall?',options:['Red and yellow','Black and white','Blue and green','Purple and gold'],answer:1,age:'7-10',why:'St Piran’s flag is a white cross on black.'},
+  {q:'About how old is Stonehenge?',options:['450 years','1,000 years','4,500 years','45,000 years'],answer:2,age:'11+',why:'Building started around 5,000 years ago and the big stones went up about 4,500 years ago.'},
+  {q:'What were Cornish engine houses used for?',options:['Making pasties','Pumping water out of mines','Building ships','Storing hay'],answer:1,age:'11+',why:'Steam engines inside pumped water out of tin and copper mines.'},
+  {q:'What kind of rock are the Dartmoor tors made of?',options:['Chalk','Granite','Sandstone','Marble'],answer:1,age:'11+',why:'Granite, formed from molten rock that cooled underground.'}
+ ],
+ ispy:['A tank crossing sign','A pony or sheep on the road','A brown sign for Stonehenge','A Cornish flag (white cross on black)','A sign in Cornish','A surfboard on a car roof','A seagull','A sign for pasties'],
+ bingo:['Stonehenge','Tank sign','Pony','Sheep','Tor','Wind turbine','Engine house','Surfboard','Seagull','Caravan','Tractor','Cornish flag','Pasty shop','Church tower','Bridge over a river','Campervan','Castle','Beach','Lighthouse','Fishing boat'],
+ phrases:[]
+};
+const EXAMPLES=[EXAMPLE,CORNWALL];
+const ROADLINGS=[{n:'Conie',c:'#F28C28',acc:'cone',at:20},{n:'Wheelie',c:'#4F86F0',acc:'wheels',at:50},{n:'Chalky',c:'#EDE8DA',acc:'chalk',at:90},{n:'Bridget',c:'#2BB673',acc:'bridge',at:140},{n:'Sat-Nav Sid',c:'#9B6BDF',acc:'antenna',at:200},{n:'Beam',c:'#F7C531',acc:'lights',at:270},{n:'Bonjour Bo',c:'#E94B5A',acc:'beret',at:350},{n:'Toll Tilly',c:'#1FB5C9',acc:'crown',at:450}];
+const INTERESTS=['Castles','Animals','Football','Food','History','Science','Cars and trucks','Nature','Music','Space'];
+const K='#14202C';
+function roadlingSVG(r,locked){
+  const acc={
+   cone:`<polygon points="37,30 63,30 50,4" fill="#F28C28" stroke="${K}" stroke-width="3" stroke-linejoin="round"/><rect x="42" y="16" width="16" height="5" fill="#fff"/>`,
+   wheels:`<circle cx="17" cy="48" r="10" fill="${K}"/><circle cx="17" cy="48" r="4" fill="#B8C2CC"/><circle cx="83" cy="48" r="10" fill="${K}"/><circle cx="83" cy="48" r="4" fill="#B8C2CC"/>`,
+   chalk:`<path d="M28 34 L36 22 L44 30 L52 18 L60 30 L68 22 L74 34" fill="none" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>`,
+   bridge:`<path d="M22 34 Q50 -2 78 34" fill="none" stroke="${K}" stroke-width="5"/><path d="M34 22 V34 M50 16 V30 M66 22 V34" stroke="${K}" stroke-width="2"/>`,
+   antenna:`<path d="M50 26 V8" stroke="${K}" stroke-width="3"/><circle cx="50" cy="7" r="5" fill="#D2232A" stroke="${K}" stroke-width="2"/>`,
+   lights:`<circle cx="38" cy="52" r="10" fill="#FFF6C2"/><circle cx="62" cy="52" r="10" fill="#FFF6C2"/>`,
+   beret:`<ellipse cx="46" cy="27" rx="22" ry="8" fill="${K}" transform="rotate(-10 46 27)"/><path d="M48 19 V13" stroke="${K}" stroke-width="3"/>`,
+   crown:`<polygon points="34,30 34,14 42,22 50,10 58,22 66,14 66,30" fill="#F7C531" stroke="${K}" stroke-width="3" stroke-linejoin="round"/>`
+  }[r.acc];
+  return `<svg viewBox="0 0 100 100" aria-hidden="true">${locked?'':acc}<ellipse cx="38" cy="88" rx="8" ry="4" fill="${K}"/><ellipse cx="62" cy="88" rx="8" ry="4" fill="${K}"/>
+   <path class="bodyfill" d="M20 60 Q20 27 50 27 Q80 27 80 60 Q80 86 50 86 Q20 86 20 60Z" fill="${locked?'#ccc':r.c}" stroke="${K}" stroke-width="3"/>
+   ${locked?`<text x="50" y="68" text-anchor="middle" font-family="Overpass,Arial,sans-serif" font-weight="900" font-size="28" fill="${K}">?</text>`:
+   `${r.acc==='lights'?'':''}<circle cx="38" cy="52" r="6.5" fill="#fff" stroke="${K}" stroke-width="2"/><circle cx="62" cy="52" r="6.5" fill="#fff" stroke="${K}" stroke-width="2"/><circle cx="39" cy="53" r="3" fill="${K}"/><circle cx="63" cy="53" r="3" fill="${K}"/><path d="M40 67 Q50 76 60 67" fill="none" stroke="${K}" stroke-width="3" stroke-linecap="round"/>${r.acc==='chalk'?`<circle cx="30" cy="70" r="2" fill="#B8B09A"/><circle cx="70" cy="68" r="2.5" fill="#B8B09A"/>`:''}`}</svg>`;
+}
+const freshProg=()=>({stop:0,done:{},revealed:{},quiz:{},ispy:[],points:0,view:'spot',age:'all',qi:0});
+let adv=(()=>{const a=store.get('adv',null);if(a&&a.exampleId)return EXAMPLES.find(x=>x.id===a.exampleId)||EXAMPLE;return a||EXAMPLE})();
+let prog=Object.assign(freshProg(),store.get('prog',{}));
+let lifetime=store.get('lifetime',0);
+let travellers=store.get('travellers',[{n:'',a:7},{n:'',a:10}]);
+let interests=store.get('interests',['Castles','Animals']);
+function saveJ(){store.set('adv',adv.example?{exampleId:adv.id}:adv);store.set('prog',prog);store.set('lifetime',lifetime)}
+const unlocked=()=>ROADLINGS.filter(r=>lifetime>=r.at).length;
+let toastTimer;
+function toast(r){let t=$('#toast');if(!t){t=document.createElement('div');t.id='toast';t.className='toast';t.setAttribute('role','status');document.body.appendChild(t)}
+  t.innerHTML=`${roadlingSVG(r)}<span>New Hitcher picked up: ${esc(r.n)}!</span>`;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.hidden=true,3500)}
+function addPoints(n){const before=unlocked();prog.points=Math.max(0,prog.points+n);lifetime=Math.max(0,lifetime+n);saveJ();const after=unlocked();if(after>before)toast(ROADLINGS[after-1])}
+
+function renderReady(){$('#readyMade').innerHTML=EXAMPLES.map(x=>`<button type="button" class="chip" data-id="${x.id}" aria-pressed="${adv.id===x.id}">${esc(x.from)} to ${esc(x.to)}</button>`).join('')+((c=>c?`<button type="button" class="chip" data-id="custom" aria-pressed="${!adv.example}">${esc(c.from)} to ${esc(c.to)}</button>`:'')(store.get('custom',null)))}
+$('#readyMade').addEventListener('click',e=>{const b=e.target.closest('[data-id]');if(!b)return;const x=b.dataset.id==='custom'?store.get('custom',null):EXAMPLES.find(y=>y.id===b.dataset.id);if(!x||x.id===adv.id)return;adv=x;prog=freshProg();saveJ();renderJourney();renderBingo()});
+function renderJourney(){renderReady();
+  const next=ROADLINGS.find(r=>lifetime<r.at), prev=[...ROADLINGS].reverse().find(r=>lifetime>=r.at);
+  const base=prev?prev.at:0, pct=next?Math.min(100,(lifetime-base)/(next.at-base)*100):100;
+  const views=[['spot','Spot'],['quiz','Quiz'],['ispy','I-spy'],...(adv.phrases&&adv.phrases.length?[['say','Phrases']]:[]),['book','Hitchers']];
+  if(!views.some(v=>v[0]===prog.view))prog.view='spot';
+  $('#jPlay').innerHTML=`
+   <div class="panel jhead">
+     <div><span class="eyebrow">${adv.example?'Ready-made journey':'Your adventure'} · ${esc(adv.from)} to ${esc(adv.to)}</span><h2>${esc(adv.title)}</h2>${adv.summary?`<p class="lede">${esc(adv.summary)}</p>`:''}</div>
+     <div class="pointsbox"><div class="pts">${prog.points}</div><small>points this journey</small><div class="progress"><i style="width:${pct}%"></i></div><small>${next?`${next.at-lifetime} more to unlock ${esc(next.n)}`:'Every Hitcher picked up!'}</small></div>
+   </div>
+   <div class="seg" role="group" aria-label="Game" id="jViews" style="justify-self:start;flex-wrap:wrap">${views.map(([k,l])=>`<button data-v="${k}" aria-pressed="${prog.view===k}">${l}</button>`).join('')}</div>
+   <div id="jView" style="display:grid;gap:14px"></div>`;
+  $('#jViews').onclick=e=>{const b=e.target.closest('button');if(!b)return;prog.view=b.dataset.v;saveJ();renderJourney()};
+  ({spot:viewSpot,quiz:viewQuiz,ispy:viewIspy,say:viewSay,book:viewBook})[prog.view]();
+}
+function viewSpot(){
+  const S=adv.stops||[], i=Math.min(prog.stop,S.length);
+  const list=`<div class="panel"><h3 style="margin-bottom:8px">The route</h3><ol class="stoplist">${S.map((s,j)=>{const d=prog.done[j];return `<li class="${d==='seen'?'ok':''}"><button data-j="${j}" aria-current="${j===i}"><span class="n">${d==='seen'?'✓':j+1}</span><span>${esc(s.name)}</span><span class="st">${d==='seen'?'+10':d==='missed'?'missed':''}</span></button></li>`}).join('')}</ol></div>`;
+  let card;
+  if(i>=S.length){const seen=Object.values(prog.done).filter(v=>v==='seen').length;
+    card=`<div class="panel stopcard"><span class="eyebrow">Journey complete</span><h3 class="bigname">You made it to ${esc(adv.to)}!</h3><p class="look">You spotted ${seen} of ${S.length} landmarks and scored ${prog.points} points.</p><div class="row"><button class="btn ghost" id="sBack">Back to the last stop</button></div></div>`;
+  } else {const s=S[i], rev=prog.revealed[i]||prog.done[i];
+    card=`<div class="panel stopcard">
+     <div class="row" style="justify-content:space-between"><span class="eyebrow">Stop ${i+1} of ${S.length}</span><span class="note">${esc(s.when||'')}</span></div>
+     <h3 class="bigname">${esc(s.name)}</h3>
+     <p class="look"><b>Look out for:</b> ${esc(s.look||'')}</p>
+     ${rev?`<div class="dyk"><b>Did you know?</b>${esc(s.fact||'')}</div>`:`<div><button class="btn ghost" id="sReveal">Show the Did You Know fact</button></div>`}
+     <div class="row"><button class="btn" id="sSeen">We spotted it! +10</button><button class="btn ghost" id="sMiss">Missed it</button>${i>0?'<button class="btn ghost" id="sBack">Back</button>':''}</div>
+    </div>`;}
+  $('#jView').innerHTML=card+list;
+  const go=n=>{prog.stop=Math.max(0,Math.min(S.length,n));saveJ();viewSpot()};
+  $('#sReveal')&&($('#sReveal').onclick=()=>{prog.revealed[i]=1;saveJ();viewSpot()});
+  $('#sSeen')&&($('#sSeen').onclick=()=>{prog.revealed[i]=1;prog.stop=i+1;if(prog.done[i]!=='seen'){prog.done[i]='seen';addPoints(10)}saveJ();renderJourney()});
+  $('#sMiss')&&($('#sMiss').onclick=()=>{prog.stop=i+1;if(prog.done[i]==='seen')addPoints(-10);prog.done[i]='missed';saveJ();renderJourney()});
+  $('#sBack')&&($('#sBack').onclick=()=>go(i-1));
+  $('#jView .stoplist').onclick=e=>{const b=e.target.closest('button');if(b)go(+b.dataset.j)};
+}
+function viewQuiz(){
+  const Q=(adv.quiz||[]).map((q,i)=>({...q,i}));
+  const ages=['all','4-6','7-10','11+'];
+  const list=Q.filter(q=>prog.age==='all'||q.age===prog.age);
+  const right=Q.filter(q=>prog.quiz[q.i]===q.answer).length, answered=Q.filter(q=>prog.quiz[q.i]!=null).length;
+  let qi=Math.min(prog.qi,Math.max(0,list.length-1));
+  const q=list[qi];
+  const chips=`<div class="row" style="justify-content:space-between"><div class="chips" id="qAges">${ages.map(a=>`<button class="chip" data-a="${a}" aria-pressed="${prog.age===a}">${a==='all'?'All ages':'Ages '+a}</button>`).join('')}</div><span class="note">${right} right out of ${answered} answered</span></div>`;
+  if(!q){$('#jView').innerHTML=chips+'<div class="panel">No questions for this age group on this journey.</div>';}
+  else{const a=prog.quiz[q.i];
+   $('#jView').innerHTML=chips+`<div class="panel stopcard">
+    <div class="row" style="justify-content:space-between"><span class="eyebrow">Question ${qi+1} of ${list.length}</span><span class="note">Ages ${esc(q.age||'all')}</span></div>
+    <h3 class="bigname" style="font-size:clamp(1.25rem,4vw,1.7rem)">${esc(q.q)}</h3>
+    <div class="qopts">${q.options.map((o,k)=>`<button data-k="${k}" ${a!=null?'disabled':''} class="${a!=null?(k===q.answer?'right':k===a?'wrong':''):''}">${esc(o)}</button>`).join('')}</div>
+    ${a!=null?`<div class="dyk"><b>${a===q.answer?'Correct! +5':'Not quite'}</b>${esc(q.why||'')}</div>`:''}
+    <div class="row">${qi>0?'<button class="btn ghost" id="qPrev">Previous</button>':''}${qi<list.length-1?'<button class="btn" id="qNext">Next question</button>':''}</div>
+   </div>`;
+   $('#jView .qopts').onclick=e=>{const b=e.target.closest('button');if(!b||a!=null)return;const k=+b.dataset.k;prog.quiz[q.i]=k;if(k===q.answer){addPoints(5);renderJourney()}else{saveJ();viewQuiz()}};
+   $('#qPrev')&&($('#qPrev').onclick=()=>{prog.qi=qi-1;saveJ();viewQuiz()});
+   $('#qNext')&&($('#qNext').onclick=()=>{prog.qi=qi+1;saveJ();viewQuiz()});
+  }
+  $('#qAges').onclick=e=>{const b=e.target.closest('button');if(!b)return;prog.age=b.dataset.a;prog.qi=0;saveJ();viewQuiz()};
+}
+function viewIspy(){
+  const L=adv.ispy||[];
+  $('#jView').innerHTML=`<div class="panel" style="display:grid;gap:10px"><h3>Spot these on the way</h3><ul class="ispy">${L.map((t,i)=>{const on=prog.ispy.includes(i);return `<li><button data-i="${i}" aria-pressed="${on}"><span class="box">${on?'✓':''}</span><span>${esc(t)}</span><span class="pt">+5</span></button></li>`}).join('')}</ul></div>`;
+  $('#jView .ispy').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;if(prog.ispy.includes(i)){prog.ispy=prog.ispy.filter(x=>x!==i);addPoints(-5)}else{prog.ispy.push(i);addPoints(5)}renderJourney()};
+}
+function viewSay(){
+  $('#jView').innerHTML=`<div class="panel" style="display:grid;gap:10px"><h3>Say it like a local</h3><p class="note" style="margin:0">Practise these before you arrive. Whoever uses one first in a shop or café gets a point on the scoreboard.</p><div class="phr">${adv.phrases.map(([l,e])=>`<div><b>${esc(l)}</b><span>${esc(e)}</span></div>`).join('')}</div></div>`;
+}
+function viewBook(){
+  $('#jView').innerHTML=`<div class="panel" style="display:grid;gap:12px"><div><h3>Your Hitchers</h3><p class="note" style="margin:2px 0 0">These little travellers hop in when you score points. Pick up all eight across your journeys. You have ${lifetime} points in total.</p></div><div class="book">${ROADLINGS.map(r=>{const has=lifetime>=r.at;return `<div class="rl ${has?'':'locked'}">${roadlingSVG(r,!has)}<b>${has?esc(r.n):'Locked'}</b><small>${has?'Collected':r.at+' points'}</small></div>`}).join('')}</div></div>`;
+}
+
+/* Plan a journey with Claude */
+let sampleFn=null, sampleChecked=false, buildCtl=null;
+if(!window.claude){$('#plan').hidden=true;$('#readyMade').insertAdjacentHTML('afterend','<p class="note" style="margin:0">Want a journey made for your own route? Plan it in <a href="https://claude.ai/artifact/GUBGKjVPT9u9ndEZnJ6Sqg" target="_blank" rel="noopener">Window Seat on Claude</a>.</p>')}
+(window.claude&&window.claude.use?window.claude.use('sample'):Promise.resolve(null)).then(s=>{sampleFn=s;sampleChecked=true;if(!s)setStatus('Building new adventures needs Claude, which isn’t available in this view. Open Window Seat in the Claude app or on claude.ai.',true)}).catch(()=>{sampleChecked=true});
+function setStatus(t,err){const el=$('#planStatus');el.textContent=t;el.classList.toggle('err',!!err)}
+function renderPlan(){
+  $('#travs').innerHTML=travellers.map((t,i)=>`<div class="trav"><input id="tn-${i}" data-i="${i}" data-f="n" aria-label="Name" placeholder="Name" value="${esc(t.n)}"><input id="ta-${i}" data-i="${i}" data-f="a" type="number" min="2" max="99" aria-label="Age" placeholder="Age" value="${esc(t.a)}"><button type="button" class="btn ghost" data-rm="${i}" aria-label="Remove traveller">×</button></div>`).join('');
+  $('#interests').innerHTML=INTERESTS.map(x=>`<button type="button" class="chip" aria-pressed="${interests.includes(x)}" data-x="${esc(x)}">${esc(x)}</button>`).join('');
+}
+$('#travs').addEventListener('input',e=>{const i=e.target.dataset.i;if(i==null)return;travellers[+i][e.target.dataset.f]=e.target.value;store.set('travellers',travellers)});
+$('#travs').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(!b)return;travellers.splice(+b.dataset.rm,1);store.set('travellers',travellers);renderPlan()});
+$('#addTrav').onclick=()=>{travellers.push({n:'',a:''});store.set('travellers',travellers);renderPlan()};
+$('#interests').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;const x=b.dataset.x;interests=interests.includes(x)?interests.filter(y=>y!==x):[...interests,x];store.set('interests',interests);renderPlan()});
+$('#stopBtn').onclick=()=>buildCtl&&buildCtl.abort();
+const ERR={not_granted:'Window Seat needs your OK to use Claude. Allow it when asked, or reload and try again.',sampling_disabled:'Claude isn’t available on this account.',rate_limited:'Claude is busy right now. Try again in a minute.',invalid_json:'The adventure came back jumbled. Try again.',refused:'Claude couldn’t plan that journey. Try different place names.',session_expired:'Please sign in to Claude again.'};
+function clean(d,from,to){
+  const str=v=>typeof v==='string'?v.trim():'';
+  const stops=(Array.isArray(d.stops)?d.stops:[]).map(s=>({name:str(s.name),when:str(s.when),look:str(s.look),fact:str(s.fact)})).filter(s=>s.name).slice(0,16);
+  const quiz=(Array.isArray(d.quiz)?d.quiz:[]).map(q=>({q:str(q.q),options:(Array.isArray(q.options)?q.options:[]).map(String).slice(0,4),answer:Number(q.answer),age:['4-6','7-10','11+'].includes(q.age)?q.age:'7-10',why:str(q.why)})).filter(q=>q.q&&q.options.length>=2&&Number.isInteger(q.answer)&&q.answer>=0&&q.answer<q.options.length);
+  if(stops.length<3)throw {code:'invalid_json'};
+  const phrases=(Array.isArray(d.phrases)?d.phrases:[]).map(p=>Array.isArray(p)?[String(p[0]||''),String(p[1]||'')]:[str(p.local),str(p.english)]).filter(p=>p[0]&&p[1]).slice(0,10);
+  return {id:Date.now(),from,to,title:str(d.title)||`${from} to ${to}`,summary:str(d.summary),stops,quiz,ispy:(Array.isArray(d.ispy)?d.ispy:[]).map(String).filter(Boolean).slice(0,12),bingo:(Array.isArray(d.bingo)?d.bingo:[]).map(String).filter(Boolean).slice(0,30),phrases};
+}
+$('#planForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const from=$('#jFrom').value.trim(), to=$('#jTo').value.trim(), via=$('#jVia').value.trim();
+  if(!from||!to){setStatus('Add where you’re starting and where you’re going.',true);return}
+  if(!sampleFn){setStatus(sampleChecked?'Building new adventures needs Claude, which isn’t available in this view. Open Window Seat in the Claude app or on claude.ai.':'Still connecting to Claude. Try again in a few seconds.',true);return}
+  const who=travellers.filter(t=>t.n||t.a).map(t=>`${t.n||'Traveller'} (age ${t.a||'unknown'})`).join(', ')||'a family with children';
+  const prompt=`You are planning a play-along car game called Window Seat for a family journey. Passengers look out of the window, spot landmarks, hear facts and answer quiz questions. The driver does not use a screen.
+
+Journey: from ${from} to ${to}${via?`, going via ${via}`:''}. The family lives in the UK. Assume the most likely driving route, including any ferry or Channel Tunnel crossing if the destination is abroad.
+Travellers: ${who}.
+They love: ${interests.join(', ')||'anything'}.
+
+Rules:
+- Use only real places and features that are on or clearly visible from the most likely route: motorways, bridges, rivers, hills, castles, cathedrals, stadiums, wind farms, ports, border crossings, cities you pass. If you are not sure something can be seen from the road, describe it as nearby or pick something general you will definitely see (like toll booths or a type of farm building).
+- Facts must be accurate and simple. Leave out anything you are not sure of. No made-up numbers.
+- When the route crosses into another country, include a stop for the border and mention a driving difference (side of the road, units, signs).
+- Lean facts and questions towards their interests and pitch them at their ages. British English.
+
+Reply with only JSON in exactly this shape:
+{"title":"short fun title","summary":"one or two sentences about the route and roughly how long it takes",
+"stops":[{"name":"landmark or feature","when":"roughly where or when on the journey","look":"what to look for out of the window","fact":"one Did You Know fact, one or two sentences"}],
+"quiz":[{"q":"question","options":["a","b","c","d"],"answer":0,"age":"4-6","why":"one sentence explaining the answer"}],
+"ispy":["things to spot on this route, short"],
+"bingo":["short spotting items for this route, 1 to 4 words"],
+"phrases":[{"local":"phrase in the local language","english":"meaning"}]}
+Give 8 to 12 stops in the order you reach them, 12 quiz questions spread across ages "4-6", "7-10" and "11+" to suit the travellers (answer is the index of the correct option), 8 ispy items, 20 bingo items, and 6 phrases only if the destination or route is in a country where English isn't the main language (otherwise an empty list).`;
+  buildCtl=new AbortController();
+  $('#buildBtn').disabled=true;$('#stopBtn').hidden=false;
+  setStatus('Planning your route… this can take up to a minute.');
+  try{
+    const d=await sampleFn.json(prompt,{signal:buildCtl.signal,cache:false});
+    adv=clean(d||{},from,to);store.set('custom',adv);prog=freshProg();saveJ();
+    setStatus('');$('#plan').open=false;renderJourney();renderBingo();window.scrollTo(0,0);
+  }catch(err){
+    if(err&&err.code==='cancelled')setStatus('Stopped.');
+    else if(err&&['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(err.code)){setStatus(ERR[err.code]||'Claude isn’t available in this view.',true)}
+    else setStatus(ERR[err&&err.code]||'Something went wrong while planning. Try again.',true);
+  }finally{$('#buildBtn').disabled=false;$('#stopBtn').hidden=true;buildCtl=null}
+});
+
+/* ---------- Boot ---------- */
+renderJourney();renderPlan();renderRoute();renderChecklist();renderClist();renderCountry();renderScore();newLetters();newWyr();renderBingo();renderHunt();
+</script>
+
+<script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
+</body>
+</html>
