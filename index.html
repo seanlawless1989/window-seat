@@ -200,6 +200,14 @@ details.plan[open]>summary::after{content:"−"}
 .rl.locked{opacity:.75}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 16px 10px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.3);max-width:calc(100% - 32px);font-family:var(--display);font-weight:800}
 .toast svg{width:52px;height:52px;flex:none}
+/* Turns */
+.turn{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;background:var(--surface-2);border-radius:14px;padding:10px 14px}
+.turn span{color:var(--muted);font-size:.95rem}
+.turn b{font-family:var(--display);font-weight:800;font-size:1.6rem;line-height:1.1;color:var(--sign)}
+.turn .linkbtn{margin-left:auto}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn.big{font-size:1.15rem;padding:14px 18px}
+.stripchip.now{background:var(--sun);color:#15242A}
 /* Games front and centre */
 .strip{flex-basis:100%;display:flex;gap:6px;align-items:center;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
 .strip::-webkit-scrollbar{display:none}
@@ -605,7 +613,7 @@ function renderBoard(){
   const recent=log.filter(e=>scope!=='trip'||e.trip===trip.id).slice(-4).reverse();
   let extra='';
   if(boardMode==='games'){extra=games.length?`<div class="tablewrap"><table class="bygame"><thead><tr><th>Game</th>${players.map(p=>`<th>${esc(p.n)}</th>`).join('')}</tr></thead><tbody>${games.map(g=>`<tr><td>${esc(g)}</td>${players.map(p=>{const v=log.filter(e=>e.g===g&&e.pid===p.id&&(scope!=='trip'||e.trip===trip.id)).reduce((a,e)=>a+e.pts,0);return `<td>${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table></div>`:'<p class="note">No points yet. Play a game below and give the winner a point.</p>'}
-  if(boardMode==='edit'){extra=`<div class="travs">${players.map(p=>`<div class="trav" style="grid-template-columns:minmax(0,1fr) auto"><input id="pn-${p.id}" data-pid="${p.id}" aria-label="Player name" value="${esc(p.n)}"><button type="button" class="btn ghost" data-rmp="${p.id}" ${players.length<2?'disabled':''} aria-label="Remove ${esc(p.n)}">Remove</button></div>`).join('')}</div><div class="row"><button type="button" class="btn ghost" id="addP">Add a player</button><button type="button" class="btn" id="doneP">Done</button></div>`}
+  if(boardMode==='edit'){extra=`<div class="travs">${players.map(p=>`<div class="trav"><input id="pn-${p.id}" data-pid="${p.id}" data-f="n" aria-label="Player name" value="${esc(p.n)}"><input id="pa-${p.id}" data-pid="${p.id}" data-f="age" type="number" min="2" max="99" aria-label="Age" placeholder="Age" value="${esc(p.age||'')}"><button type="button" class="btn ghost" data-rmp="${p.id}" ${players.length<2?'disabled':''} aria-label="Remove ${esc(p.n)}">Remove</button></div>`).join('')}</div><div class="row"><button type="button" class="btn ghost" id="addP">Add a player</button><button type="button" class="btn" id="doneP">Done</button></div>`}
   if(boardMode==='newtrip'){extra=`<div class="dyk"><b>Start a new trip?</b>This trip's scores stay in All time, and everyone starts again from 0.</div><div class="row"><button type="button" class="btn" id="yesTrip">Yes, start a new trip</button><button type="button" class="btn ghost" id="noTrip">Cancel</button></div>`}
   $('#board').innerHTML=`
    <div class="row" style="justify-content:space-between"><div><h3>Scoreboard</h3><span class="note">${scope==='trip'?`This trip, since ${new Date(trip.start).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`:'Every trip added up'}</span></div>
@@ -625,9 +633,9 @@ $('#board').addEventListener('click',e=>{
   if(b.id==='doneP'||b.id==='noTrip'){boardMode='';renderBoard();renderGame();return}
   if(b.id==='yesTrip'){trip={id:(trip.id||1)+1,start:Date.now()};scope='trip';boardMode='';saveScores();renderBoard();renderStrip();flash('New trip started. Good luck!');return}
 });
-$('#board').addEventListener('input',e=>{const id=e.target.dataset.pid;if(!id)return;const p=players.find(x=>x.id===id);if(p){p.n=e.target.value;saveScores();renderStrip()}});
+$('#board').addEventListener('input',e=>{const id=e.target.dataset.pid;if(!id)return;const p=players.find(x=>x.id===id);if(p){p[e.target.dataset.f||'n']=e.target.value;saveScores();renderStrip()}});
 function renderStrip(){const T=totals('trip');const r=[...players].sort((a,b)=>T[b.id]-T[a.id]);
-  $('#strip').innerHTML=`<span class="striplabel">This trip</span>`+r.map((p,i)=>`<button type="button" class="stripchip" data-go="games">${i===0&&T[p.id]>0?'♛ ':''}${esc(p.n)} <b>${T[p.id]}</b></button>`).join('')}
+  $('#strip').innerHTML=`<span class="striplabel">This trip</span>`+r.map((p,i)=>`<button type="button" class="stripchip ${turnP()&&turnP().id===p.id?'now':''}" data-go="games" ${turnP()&&turnP().id===p.id?'aria-label="'+esc(p.n)+'’s turn, '+T[p.id]+' points"':''}>${i===0&&T[p.id]>0?'♛ ':''}${esc(p.n)} <b>${T[p.id]}</b></button>`).join('')}
 $('#strip').addEventListener('click',e=>{if(e.target.closest('[data-go]'))showTab('games')});
 
 /* ---------- Games ---------- */
@@ -675,67 +683,84 @@ const GAMELIST=[
  {id:'story',n:'Story chain',d:'Silly story starters',age:'4+'},
  {id:'wyr',n:'Would you rather',d:'Pick one, explain why',age:'4+'}
 ];
-let gstate=Object.assign({cur:'fact'},store.get('gstate',{}));
+let gstate=Object.assign({cur:'fact',turn:0},store.get('gstate',{}));
 let timer=null;
 function saveG(){store.set('gstate',gstate)}
 function renderTiles(){$('#tiles').innerHTML=GAMELIST.map(g=>`<button type="button" class="tile" data-g="${g.id}" aria-pressed="${gstate.cur===g.id}"><b>${esc(g.n)}</b><span>${esc(g.d)}</span><small>${g.age}</small></button>`).join('')}
 $('#tiles').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;gstate.cur=b.dataset.g;saveG();renderTiles();renderGame();$('#gamebox').scrollIntoView({behavior:'smooth',block:'start'})});
+/* Turns: each question goes to one player, round the car */
+const turnP=()=>players.length?players[(gstate.turn||0)%players.length]:null;
+const nextName=()=>players.length?players[((gstate.turn||0)+1)%players.length].n:'';
+function nextTurn(){gstate.turn=((gstate.turn||0)+1)%Math.max(1,players.length);saveG();renderStrip()}
+const band=p=>{const a=+(p&&p.age);if(!a)return null;return a<=6?'4-6':a<=10?'7-10':'11+'};
+function turnBanner(label){const p=turnP();return p?`<div class="turn"><span>${label||'Question for'}</span><b>${esc(p.n)}</b>${players.length>1?`<button type="button" class="linkbtn" data-turn="skip">Skip to ${esc(nextName())}</button>`:''}</div>`:''}
+document.addEventListener('click',e=>{if(!e.target.closest('[data-turn=skip]'))return;nextTurn();
+  if(!$('#p-journey').hidden){if(prog.qcur!=null&&prog.quiz[prog.qcur]!=null)prog.qcur=null;saveJ();renderJourney()}else renderGame()});
+function newItem(){const c=gstate.cur;
+  if(c==='fact'){gstate.fact=nextFact();gstate.factAns=null}
+  if(c==='riddle'){gstate.riddle=nextRiddle();gstate.riddleShown=0}
+  if(c==='quick')gstate.quick=null;
+  if(c==='plates')gstate.plate=null;
+  if(c==='twenty')gstate.tw=null;
+  if(c==='story')gstate.story=nextStory();
+  if(c==='wyr')gstate.wyr=nextWyr();}
+function advance(){newItem();nextTurn();renderGame()}
+const duo=(game,pts,yes,no)=>`<div class="duo"><button class="btn big" data-act="score" data-pts="${pts}" data-g="${esc(game)}">${esc(yes)}</button><button class="btn big ghost" data-act="score" data-pts="0" data-g="${esc(game)}">${esc(no)}</button></div>`;
 function renderGame(){
   clearInterval(timer);timer=null;
-  const g=GAMELIST.find(x=>x.id===gstate.cur)||GAMELIST[0], box=$('#gamebox');
+  const g=GAMELIST.find(x=>x.id===gstate.cur)||GAMELIST[0], box=$('#gamebox'), P=turnP(), nm=P?esc(P.n):'';
   let body='';
-  if(g.id==='fact'){if(!gstate.fact)gstate.fact=nextFact();const [s,t,w]=gstate.fact;
-    body=`<p class="note">Read it out. Everyone shouts “Fact!” or “Fib!”, then reveal.</p><div class="bigcall">${esc(s)}</div>
-    ${gstate.factShown?`<div class="dyk"><b>${t?'Fact!':'Fib!'}</b>${esc(w)}</div>${giveRow('Fact or Fib',1,'Right answer? Give a point to')}`:''}
-    <div class="row">${gstate.factShown?'':'<button class="btn" data-act="reveal">Reveal</button>'}<button class="btn ${gstate.factShown?'':'ghost'}" data-act="nextfact">Next one</button></div>`}
+  if(g.id==='fact'){if(!gstate.fact)gstate.fact=nextFact();const [s,t,w]=gstate.fact, a=gstate.factAns;
+    body=turnBanner()+`<div class="bigcall">${esc(s)}</div>`+(a==null
+      ?`<p class="note" style="margin:0">${nm}, is it a fact or a fib? Tap their answer.</p><div class="duo"><button class="btn big" data-act="fa" data-v="1">Fact</button><button class="btn big" data-act="fa" data-v="0">Fib</button></div>`
+      :`<div class="dyk"><b>${a===t?`Right! +1 for ${nm}`:`Not quite, it’s a ${t?'fact':'fib'}`}</b>${esc(w)}</div><div class="row"><button class="btn" data-act="next">Next: ${esc(nextName())}’s question</button></div>`)}
   if(g.id==='riddle'){if(!gstate.riddle)gstate.riddle=nextRiddle();const [q,a]=gstate.riddle;
-    body=`<div class="bigcall">${esc(q)}</div>${gstate.riddleShown?`<div class="dyk"><b>Answer</b>${esc(a)}</div>${giveRow('Riddles',1,'Who got it?')}`:''}
-    <div class="row">${gstate.riddleShown?'':'<button class="btn" data-act="reveal">Show the answer</button>'}<button class="btn ${gstate.riddleShown?'':'ghost'}" data-act="nextriddle">Next riddle</button></div>`}
+    body=turnBanner()+`<div class="bigcall">${esc(q)}</div>`+(!gstate.riddleShown
+      ?`<div class="row"><button class="btn" data-act="reveal">Show the answer</button></div>`
+      :`<div class="dyk"><b>Answer</b>${esc(a)}</div><p class="note" style="margin:0">Did ${nm} get it?</p>${duo('Riddles',1,'Got it! +1','Missed it')}`)}
   if(g.id==='quick'){if(!gstate.quick)gstate.quick=[rnd(QLET),rnd(CATS)];const [L,C]=gstate.quick;
-    body=`<p class="note">Take turns, or all shout at once: name as many as you can in 30 seconds. Most answers wins.</p>
+    body=turnBanner('Your go,')+`<p class="note" style="margin:0">${nm} names as many as they can in 30 seconds. Everyone else counts.</p>
     <div class="quick"><span class="qletter">${L}</span><div><span class="eyebrow">Topic</span><div class="bigcall" style="min-height:0">${esc(C)}</div></div></div>
     <div class="timer" id="timer" aria-live="polite">30</div>
-    <div class="row"><button class="btn" data-act="start">Start the clock</button><button class="btn ghost" data-act="nextquick">New letter and topic</button></div>${giveRow('Quick-fire',1,'Winner')}`}
+    <div class="row"><button class="btn" data-act="start">Start the clock</button><button class="btn ghost" data-act="newone">Different letter and topic</button></div>
+    <div class="give"><span class="flabel">How many did ${nm} get? 1 point each</span><div class="chips">${[0,1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="chip big" data-act="score" data-pts="${n}" data-g="Quick-fire">${n}</button>`).join('')}</div></div>`}
   if(g.id==='plates'){if(!gstate.plate)gstate.plate=Array.from({length:3},()=>rnd(LET)).join('');
-    body=`<p class="note">Make a phrase from the three letters, in order. KLM could be “Kind Llamas Munch”. The funniest answer wins.</p>
+    body=turnBanner('Your go,')+`<p class="note" style="margin:0">Make a phrase from the three letters, in order. KLM could be “Kind Llamas Munch”.</p>
     <div class="lettersplate" aria-live="polite"><span class="code">UK</span><span class="txt">${gstate.plate}</span></div>
-    <div class="row"><button class="btn" data-act="nextplate">New letters</button></div>${giveRow('Plate phrases',1,'Funniest answer')}`}
+    <p class="note" style="margin:0">Did ${nm} make one?</p>${duo('Plate phrases',1,'Yes! +1','Pass')}`}
   if(g.id==='twenty'){if(!gstate.tw)gstate.tw={what:rnd(TWENTY),n:0};const tw=gstate.tw;
-    body=`<p class="note">The thinker picks <b>${esc(tw.what)}</b> and keeps it secret. Everyone else asks yes-or-no questions. Tap after each question.</p>
+    body=turnBanner('Thinking of something:')+`<p class="note" style="margin:0">${nm} secretly picks <b>${esc(tw.what)}</b>. Everyone else asks yes-or-no questions. Tap after each question.</p>
     <div class="timer">${20-tw.n}<small>questions left</small></div>
-    <div class="row"><button class="btn" data-act="ask" ${tw.n>=20?'disabled':''}>Asked one</button><button class="btn ghost" data-act="newtwenty">New round</button></div>
-    ${tw.n>=20?'<div class="dyk"><b>Stumped!</b>The thinker wins this round.</div>':''}
-    ${giveRow('20 Questions',2,tw.n>=20?'Give the thinker 2 points':'Guessed it? Give 2 points to')}`}
+    ${tw.n>=20?`<div class="dyk"><b>Stumped!</b>Nobody guessed it.</div>${duo('20 Questions',2,`+2 for ${P?P.n:''}`,'Skip')}`
+      :`<div class="row"><button class="btn" data-act="ask">Asked one</button></div>${giveRow('20 Questions',2,'Guessed it? 2 points to')}`}`}
   if(g.id==='alpha'){const got=gstate.alpha||0;const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    body=`<p class="note">Find each letter in order on signs, lorries and shop fronts. Tap the next letter when someone spots it. Team game: race to Z before you arrive.</p>
+    body=`<p class="note">Team game. Find each letter in order on signs, lorries and shop fronts. Tap the next letter when someone spots it. Race to Z before you arrive.</p>
     <div class="alpha">${[...A].map((c,i)=>`<span class="${i<got?'on':i===got?'next':''}">${c}</span>`).join('')}</div>
     ${got>=26?'<div class="dyk"><b>A to Z done!</b>Who spotted the Z?</div>'+giveRow('Alphabet race',3,'Give 3 points to'):`<div class="row"><button class="btn" data-act="alpha">Found ${A[got]}!</button><button class="btn ghost" data-act="alphaback" ${got?'':'disabled'}>Undo</button></div>`}
     <div class="row"><button class="btn ghost" data-act="alphareset">Start again</button></div>`}
   if(g.id==='story'){if(!gstate.story)gstate.story=nextStory();const [a,b]=gstate.story;
-    body=`<p class="note">Read the start, then go round the car adding one sentence each. Bonus if you work in something you can see out of the window.</p>
-    <div class="bigcall">${esc(a)} ${esc(b)}…</div>
-    <div class="row"><button class="btn" data-act="nextstory">Another starter</button></div>${giveRow('Story chain',1,'Best sentence')}`}
+    body=`<div class="bigcall">${esc(a)} ${esc(b)}…</div>`+turnBanner('Next sentence:')+`<p class="note" style="margin:0">Go round the car adding one sentence each. Bonus if you work in something you can see out of the window.</p>
+    <div class="row"><button class="btn" data-act="pass">${esc(nextName())}’s turn</button><button class="btn ghost" data-act="newone">New story</button></div>`}
   if(g.id==='wyr'){if(!gstate.wyr)gstate.wyr=nextWyr();
-    body=`<p class="note">Everyone picks one and says why. No wrong answers.</p><div class="bigcall">Would you rather ${esc(gstate.wyr)}</div>
-    <div class="row"><button class="btn" data-act="nextwyr">Another one</button></div>${giveRow('Would you rather',1,'Best reason')}`}
+    body=turnBanner('Question for')+`<div class="bigcall">Would you rather ${esc(gstate.wyr)}</div><p class="note" style="margin:0">${nm} picks one and says why. Then everyone else.</p>
+    <div class="row"><button class="btn" data-act="next">Next: ${esc(nextName())}’s question</button></div>`}
   saveG();
   box.innerHTML=`<div class="row" style="justify-content:space-between"><h3 class="gtitle">${esc(g.n)}</h3><span class="age">${g.age}</span></div>${body}`;
   renderClassic();
 }
 $('#gamebox').addEventListener('click',e=>{
+  if(e.target.closest('.give [data-pid]')&&gstate.cur==='twenty'){setTimeout(advance,350);return}
   const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
-  if(a==='reveal'){if(gstate.cur==='fact')gstate.factShown=1;else gstate.riddleShown=1}
-  if(a==='nextfact'){gstate.fact=nextFact();gstate.factShown=0}
-  if(a==='nextriddle'){gstate.riddle=nextRiddle();gstate.riddleShown=0}
-  if(a==='nextquick')gstate.quick=null;
-  if(a==='nextplate')gstate.plate=null;
+  if(a==='fa'){const pick=b.dataset.v==='1';gstate.factAns=pick;if(pick===gstate.fact[1])award(turnP().id,'Fact or Fib',1)}
+  if(a==='reveal')gstate.riddleShown=1;
+  if(a==='score'){const n=+b.dataset.pts;if(n>0&&turnP())award(turnP().id,b.dataset.g,n);advance();return}
+  if(a==='next'){advance();return}
+  if(a==='pass'){nextTurn()}
+  if(a==='newone')newItem();
   if(a==='ask')gstate.tw.n=Math.min(20,gstate.tw.n+1);
-  if(a==='newtwenty')gstate.tw=null;
   if(a==='alpha')gstate.alpha=Math.min(26,(gstate.alpha||0)+1);
   if(a==='alphaback')gstate.alpha=Math.max(0,(gstate.alpha||0)-1);
   if(a==='alphareset')gstate.alpha=0;
-  if(a==='nextstory')gstate.story=nextStory();
-  if(a==='nextwyr')gstate.wyr=nextWyr();
   if(a==='start'){let n=30;const el=$('#timer');b.disabled=true;el.textContent=n;el.classList.remove('done');clearInterval(timer);
     timer=setInterval(()=>{n--;el.textContent=n>0?n:'Time!';if(n<=0){clearInterval(timer);timer=null;el.classList.add('done');b.disabled=false}},1000);return}
   renderGame();
@@ -923,26 +948,24 @@ function viewSpot(){
 }
 function viewQuiz(){
   const Q=(adv.quiz||[]).map((q,i)=>({...q,i}));
-  const ages=['all','4-6','7-10','11+'];
-  const list=Q.filter(q=>prog.age==='all'||q.age===prog.age);
-  const right=Q.filter(q=>prog.quiz[q.i]===q.answer).length, answered=Q.filter(q=>prog.quiz[q.i]!=null).length;
-  let qi=Math.min(prog.qi,Math.max(0,list.length-1));
-  const q=list[qi];
-  const chips=`<div class="row" style="justify-content:space-between"><div class="chips" id="qAges">${ages.map(a=>`<button class="chip" data-a="${a}" aria-pressed="${prog.age===a}">${a==='all'?'All ages':'Ages '+a}</button>`).join('')}</div><span class="note">${right} right out of ${answered} answered</span></div>`;
-  if(!q){$('#jView').innerHTML=chips+'<div class="panel">No questions for this age group on this journey.</div>';}
-  else{const a=prog.quiz[q.i];
-   $('#jView').innerHTML=chips+`<div class="panel stopcard">
-    <div class="row" style="justify-content:space-between"><span class="eyebrow">Question ${qi+1} of ${list.length}</span><span class="note">Ages ${esc(q.age||'all')}</span></div>
+  const left=Q.filter(q=>prog.quiz[q.i]==null);
+  const right=Q.filter(q=>prog.quiz[q.i]===q.answer).length, answered=Q.length-left.length;
+  const P=turnP(), b=band(P);
+  let q=prog.qcur!=null?Q[prog.qcur]:null;
+  if(!q){q=(b&&left.find(x=>x.age===b))||left[0];if(q){prog.qcur=q.i;saveJ()}}
+  const head=`<div class="row" style="justify-content:space-between"><span class="note">${answered} of ${Q.length} answered, ${right} right</span><span class="note">Add ages under Games › Edit players to get questions to suit each player</span></div>`;
+  if(!q){$('#jView').innerHTML=head+`<div class="panel stopcard"><h3 class="bigname">Quiz complete!</h3><p class="look">${right} right out of ${Q.length}.</p><div class="row"><button class="btn" id="qAgain">Play again</button></div></div>`;
+    $('#qAgain').onclick=()=>{prog.quiz={};prog.qcur=null;saveJ();viewQuiz()};return}
+  const a=prog.quiz[q.i], nm=P?esc(P.n):'';
+  $('#jView').innerHTML=head+`<div class="panel stopcard">
+    ${turnBanner()}
+    <span class="eyebrow">Ages ${esc(q.age||'all')}</span>
     <h3 class="bigname" style="font-size:clamp(1.25rem,4vw,1.7rem)">${esc(q.q)}</h3>
     <div class="qopts">${q.options.map((o,k)=>`<button data-k="${k}" ${a!=null?'disabled':''} class="${a!=null?(k===q.answer?'right':k===a?'wrong':''):''}">${esc(o)}</button>`).join('')}</div>
-    ${a!=null?`<div class="dyk"><b>${a===q.answer?'Correct! +5':'Not quite'}</b>${esc(q.why||'')}</div>`:''}
-    <div class="row">${qi>0?'<button class="btn ghost" id="qPrev">Previous</button>':''}${qi<list.length-1?'<button class="btn" id="qNext">Next question</button>':''}</div>
+    ${a!=null?`<div class="dyk"><b>${a===q.answer?`Correct! +5 for ${nm}`:'Not quite'}</b>${esc(q.why||'')}</div><div class="row"><button class="btn" id="qNext">Next: ${esc(nextName())}’s question</button></div>`:''}
    </div>`;
-   $('#jView .qopts').onclick=e=>{const b=e.target.closest('button');if(!b||a!=null)return;const k=+b.dataset.k;prog.quiz[q.i]=k;if(k===q.answer){addPoints(5);askWho('Route quiz',5);renderJourney()}else{saveJ();viewQuiz()}};
-   $('#qPrev')&&($('#qPrev').onclick=()=>{prog.qi=qi-1;saveJ();viewQuiz()});
-   $('#qNext')&&($('#qNext').onclick=()=>{prog.qi=qi+1;saveJ();viewQuiz()});
-  }
-  $('#qAges').onclick=e=>{const b=e.target.closest('button');if(!b)return;prog.age=b.dataset.a;prog.qi=0;saveJ();viewQuiz()};
+  $('#jView .qopts').onclick=e=>{const bt=e.target.closest('button');if(!bt||a!=null)return;const k=+bt.dataset.k;prog.quiz[q.i]=k;if(k===q.answer){addPoints(5);P&&award(P.id,'Route quiz',5)}saveJ();renderJourney()};
+  $('#qNext')&&($('#qNext').onclick=()=>{prog.qcur=null;nextTurn();saveJ();renderJourney()});
 }
 function viewIspy(){
   const L=adv.ispy||[];
