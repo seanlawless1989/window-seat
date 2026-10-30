@@ -200,7 +200,64 @@ details.plan[open]>summary::after{content:"−"}
 .rl.locked{opacity:.75}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;background:var(--ink);color:var(--bg);border-radius:12px;padding:10px 16px 10px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 30px rgba(0,0,0,.3);max-width:calc(100% - 32px);font-family:var(--display);font-weight:800}
 .toast svg{width:52px;height:52px;flex:none}
+/* Games front and centre */
+.strip{flex-basis:100%;display:flex;gap:6px;align-items:center;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}
+.strip::-webkit-scrollbar{display:none}
+.striplabel{font-size:.75rem;opacity:.8;white-space:nowrap;margin-right:2px}
+.stripchip{flex:none;font:inherit;font-size:.85rem;border:0;border-radius:999px;padding:3px 10px;background:rgba(255,255,255,.14);color:var(--hdr-ink);cursor:pointer;white-space:nowrap}
+.stripchip b{font-family:var(--display);font-variant-numeric:tabular-nums;margin-left:2px}
+.ranks{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.ranks li{display:grid;grid-template-columns:28px minmax(70px,auto) minmax(0,1fr) 56px;gap:10px;align-items:center;padding:8px 10px;border-radius:12px;background:var(--surface-2)}
+.ranks li.lead{background:var(--plate);color:var(--plate-ink)}
+.ranks .rk{font-family:var(--mono);font-size:.8rem;opacity:.7}
+.ranks .nm{font-family:var(--display);font-weight:800;font-size:1.1rem;min-width:0;overflow-wrap:anywhere}
+.ranks .bar{height:10px;border-radius:99px;background:rgba(127,127,127,.18);overflow:hidden}
+.ranks .bar i{display:block;height:100%;background:var(--sign);border-radius:99px}
+.ranks li.lead .bar i{background:var(--plate-ink)}
+.ranks .tot{font-family:var(--display);font-weight:800;font-size:1.6rem;text-align:right;font-variant-numeric:tabular-nums}
+.recent{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-size:.9rem;color:var(--muted)}
+.recent li{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.recent b{color:var(--ink)}
+.linkbtn{font:inherit;font-size:.85rem;border:0;background:none;color:var(--sign);text-decoration:underline;cursor:pointer;padding:2px 4px}
+.tablewrap{overflow-x:auto}
+.bygame{border-collapse:collapse;font-size:.9rem;min-width:100%}
+.bygame th,.bygame td{padding:6px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;font-variant-numeric:tabular-nums}
+.bygame th:first-child,.bygame td:first-child{text-align:left}
+.bygame th{font-family:var(--display);font-weight:800}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tile{font:inherit;text-align:left;display:grid;gap:2px;align-content:start;padding:14px;border-radius:18px;border:2px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;min-height:96px}
+.tile b{font-family:var(--display);font-weight:800;font-size:1.15rem;line-height:1.15}
+.tile span{color:var(--muted);font-size:.88rem;line-height:1.3}
+.tile small{font-family:var(--mono);font-size:.7rem;color:var(--muted);margin-top:4px}
+.tile[aria-pressed="true"]{background:var(--sign);border-color:var(--sign);color:var(--sign-ink)}
+.tile[aria-pressed="true"] span,.tile[aria-pressed="true"] small{color:var(--sign-ink);opacity:.85}
+.gamebox{display:grid;gap:14px;border:2px solid var(--sign);scroll-margin-top:120px}
+.gtitle{font-size:1.4rem}
+.give{display:grid;gap:6px;padding-top:12px;border-top:1px dashed var(--line)}
+.give .chip.given{background:var(--go);border-color:var(--go);color:#fff}
+.quick{display:flex;gap:16px;align-items:center}
+.qletter{flex:none;width:84px;height:84px;border-radius:20px;background:var(--plate);color:var(--plate-ink);display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:3rem}
+.timer{font-family:var(--display);font-weight:800;font-size:3rem;line-height:1;font-variant-numeric:tabular-nums;color:var(--sign);display:flex;align-items:baseline;gap:10px}
+.timer small{font-family:var(--body);font-weight:400;font-size:1rem;color:var(--muted)}
+.timer.done{color:var(--ring)}
+.alpha{display:grid;grid-template-columns:repeat(auto-fill,minmax(38px,1fr));gap:6px}
+.alpha span{aspect-ratio:1;display:grid;place-items:center;border-radius:10px;border:2px solid var(--line);font-family:var(--display);font-weight:800;font-size:1.1rem;color:var(--muted)}
+.alpha span.on{background:var(--go);border-color:var(--go);color:#fff}
+.alpha span.next{border-color:var(--sign);color:var(--ink);box-shadow:0 0 0 2px var(--sign)}
+details.classic>summary{cursor:pointer;list-style:none}
+details.classic>summary::-webkit-details-marker{display:none}
+details.classic>summary::after{content:" +";font-family:var(--display);font-weight:800;color:var(--sign)}
+details.classic[open]>summary::after{content:" −"}
+.card .give{margin-top:4px}
+.sheet{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;justify-content:center;padding:16px max(16px,env(safe-area-inset-right,0px)) calc(16px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.sheetbox{background:var(--surface);color:var(--ink);border-radius:22px;padding:18px;display:grid;gap:10px;width:100%;max-width:520px;box-shadow:0 10px 40px rgba(0,0,0,.3)}
+.sheetbox>b{font-family:var(--display);font-weight:800;font-size:1.3rem}
+.chip.big{font-size:1.05rem;padding:10px 18px}
+.ghostchip{border-style:dashed}
 @media (max-width:720px){
+  header{position:static}
+  .ranks li{grid-template-columns:22px minmax(0,1fr) 48px}
+  .ranks .bar{grid-column:2 / 4;grid-row:2}
   .jhead{grid-template-columns:minmax(0,1fr)}
   .pointsbox{justify-items:start;text-align:left}
 
@@ -219,12 +276,13 @@ details.plan[open]>summary::after{content:"−"}
   <div class="wrap">
     <div class="brand"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M5 30 Q5 8 22 7 L33 7 Q36 7 36 10 L36 30 Q36 33 33 33 L8 33 Q5 33 5 30Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><circle cx="26" cy="17" r="5" fill="var(--sun)"/><path d="M9 29 Q18 22 34 25" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg><h1>Window Seat</h1><span>Road trip games for the UK &amp; Europe</span></div>
     <nav role="tablist" aria-label="Sections">
+      <button role="tab" id="t-games" aria-controls="p-games" data-tab="games">Games</button>
       <button role="tab" id="t-journey" aria-controls="p-journey" data-tab="journey">Journey</button>
+      <button role="tab" id="t-spot" aria-controls="p-spot" data-tab="spot">Spotting</button>
       <button role="tab" id="t-trip" aria-controls="p-trip" data-tab="trip">Checklist</button>
       <button role="tab" id="t-rules" aria-controls="p-rules" data-tab="rules">Rules</button>
-      <button role="tab" id="t-games" aria-controls="p-games" data-tab="games">Games</button>
-      <button role="tab" id="t-spot" aria-controls="p-spot" data-tab="spot">Spotting</button>
     </nav>
+    <div class="strip" id="strip" aria-label="Running scores"></div>
   </div>
 </header>
 
@@ -293,29 +351,16 @@ details.plan[open]>summary::after{content:"−"}
 
   <!-- GAMES -->
   <section role="tabpanel" id="p-games" aria-labelledby="t-games" hidden>
-    <div>
-      <h2>Back-seat games</h2>
-      <p class="lede">No screens needed. Keep score here if you like.</p>
+    <div style="display:grid;gap:10px">
+      <h2>Pick a game</h2>
+      <div class="tiles" id="tiles"></div>
     </div>
-    <div class="panel" style="display:grid;gap:12px">
-      <div class="row" style="justify-content:space-between"><h3>Scoreboard</h3>
-        <div class="row"><button class="btn ghost" id="addPlayer">Add player</button><button class="btn ghost" id="zeroScores">Reset scores</button></div></div>
-      <div class="score" id="score"></div>
-    </div>
-    <div class="cards">
-      <div class="panel generator">
-        <span class="eyebrow">Number plate phrases</span>
-        <div class="lettersplate" aria-live="polite"><span class="code">UK</span><span class="txt" id="letters">KLM</span></div>
-        <p class="note" style="margin:0">Make a phrase from the three letters, in order. KLM could be “Kind Llamas Munch”. Funniest answer wins a point.</p>
-        <div class="row"><button class="btn" id="newLetters">New letters</button></div>
-      </div>
-      <div class="panel generator">
-        <span class="eyebrow">Would you rather</span>
-        <div class="bigcall" id="wyr" aria-live="polite"></div>
-        <div class="row"><button class="btn" id="newWyr">Another one</button></div>
-      </div>
-    </div>
-    <div class="cards" id="gameCards"></div>
+    <div class="panel gamebox" id="gamebox"></div>
+    <div class="panel" id="board" style="display:grid;gap:12px"></div>
+    <details class="panel classic">
+      <summary><h3 style="display:inline">More games, no screen needed</h3></summary>
+      <div class="cards" id="gameCards" style="margin-top:12px"></div>
+    </details>
   </section>
 
   <!-- SPOTTING -->
@@ -326,7 +371,7 @@ details.plan[open]>summary::after{content:"−"}
     </div>
     <div class="panel" style="display:grid;gap:14px">
       <div class="row" style="justify-content:space-between">
-        <div class="seg" role="group" aria-label="Card type">
+        <div class="seg" role="group" aria-label="Card type" id="poolSeg">
           <button data-pool="route">This journey</button><button data-pool="uk">UK roads</button><button data-pool="eu">Europe</button>
         </div>
         <button class="btn" id="newCard">New card</button>
@@ -452,10 +497,10 @@ const byId=Object.fromEntries(C.map(c=>[c.id,c]));
 
 /* ---------- Tabs ---------- */
 const tabs=[...document.querySelectorAll('[role="tab"]')];
-function showTab(name){tabs.forEach(t=>{const on=t.dataset.tab===name;t.setAttribute('aria-selected',on);document.getElementById('p-'+t.dataset.tab).hidden=!on});store.set('tab',name);window.scrollTo(0,0)}
+function showTab(name){tabs.forEach(t=>{const on=t.dataset.tab===name;t.setAttribute('aria-selected',on);document.getElementById('p-'+t.dataset.tab).hidden=!on});store.set('tab2',name);window.scrollTo(0,0)}
 tabs.forEach(t=>t.addEventListener('click',()=>showTab(t.dataset.tab)));
 const hash=location.hash.slice(1);
-showTab(['journey','trip','rules','games','spot'].includes(hash)?hash:store.get('tab','journey'));
+showTab(['journey','trip','rules','games','spot'].includes(hash)?hash:store.get('tab2','games'));
 
 /* ---------- Trip & checklist ---------- */
 let route=store.get('route',['UK','F']);
@@ -527,40 +572,187 @@ function pick(id){current=id;store.set('country',id);renderClist();renderCountry
 $('#clist').addEventListener('click',e=>{const b=e.target.closest('button');if(b)pick(b.dataset.id)});
 $('#cpick').addEventListener('change',e=>pick(e.target.value));
 
-/* ---------- Games ---------- */
-let players=store.get('players',[{n:'Mum',p:0},{n:'Dad',p:0},{n:'Kid 1',p:0},{n:'Kid 2',p:0}]);
-function renderScore(){
-  $('#score').innerHTML=players.map((pl,i)=>`<div class="player"><input id="pl-${i}" aria-label="Player name" value="${esc(pl.n)}" data-i="${i}"><div class="pts">${pl.p}</div><div class="row"><button class="btn ghost" data-i="${i}" data-d="-1" aria-label="Minus one for ${esc(pl.n)}">−1</button><button class="btn" data-i="${i}" data-d="1" aria-label="Plus one for ${esc(pl.n)}">+1</button></div></div>`).join('');
+/* ---------- Players & running scores ---------- */
+let players=(()=>{const p=store.get('players2',null);if(p)return p;
+  const old=store.get('players',[{n:'Mum'},{n:'Dad'},{n:'Kid 1'},{n:'Kid 2'}]);return old.map((o,i)=>({id:'p'+(i+1),n:o.n||('Player '+(i+1)),carry:o.p||0}))})();
+let trip=store.get('trip',{id:1,start:Date.now()});
+let log=store.get('log',null);
+if(!log){log=[];players.forEach(p=>{if(p.carry)log.push({t:Date.now(),pid:p.id,g:'Earlier scores',pts:p.carry,trip:trip.id});delete p.carry})}
+let scope=store.get('scope','trip'), boardMode='';
+function saveScores(){store.set('players2',players);store.set('log',log.slice(-3000));store.set('trip',trip);store.set('scope',scope)}
+saveScores();
+const pname=id=>{const p=players.find(x=>x.id===id);return p?p.n:'Someone'};
+function totals(sc){const t={};players.forEach(p=>t[p.id]=0);log.forEach(e=>{if((sc||scope)==='trip'&&e.trip!==trip.id)return;if(e.pid in t)t[e.pid]+=e.pts});return t}
+function award(pid,game,pts){if(!pid)return;log.push({t:Date.now(),pid,g:game,pts,trip:trip.id});saveScores();renderBoard();renderStrip();flash(`+${pts} ${pname(pid)} · ${game}`)}
+let flashTimer;
+function flash(msg){let f=$('#flash');if(!f){f=document.createElement('div');f.id='flash';f.className='toast';f.setAttribute('role','status');document.body.appendChild(f)}f.textContent=msg;f.hidden=false;clearTimeout(flashTimer);flashTimer=setTimeout(()=>f.hidden=true,2200)}
+const giveRow=(game,pts,label)=>`<div class="give" data-game="${esc(game)}" data-pts="${pts}"><span class="flabel">${esc(label||`Give ${pts} point${pts>1?'s':''} to`)}</span><div class="chips">${players.map(p=>`<button type="button" class="chip" data-pid="${p.id}">${esc(p.n)}</button>`).join('')}</div></div>`;
+document.addEventListener('click',e=>{const b=e.target.closest('.give [data-pid]');if(!b)return;const g=b.closest('.give');award(b.dataset.pid,g.dataset.game,+g.dataset.pts);b.classList.add('given');setTimeout(()=>b.classList.remove('given'),600)});
+
+/* Who-won sheet, used by journey, quiz, bingo and plate hunt */
+function askWho(game,pts){
+  let s=$('#sheet');if(!s){s=document.createElement('div');s.id='sheet';s.className='sheet';s.setAttribute('role','dialog');s.setAttribute('aria-label','Who scored?');document.body.appendChild(s)}
+  s.innerHTML=`<div class="sheetbox"><b>Who gets ${pts} point${pts>1?'s':''}?</b><span class="note">${esc(game)}</span><div class="chips">${players.map(p=>`<button type="button" class="chip big" data-pid="${p.id}">${esc(p.n)}</button>`).join('')}<button type="button" class="chip big ghostchip" data-skip="1">Team effort</button></div></div>`;
+  s.hidden=false;
+  s.onclick=e=>{const b=e.target.closest('button');if(!b&&e.target!==s)return;if(b&&b.dataset.pid)award(b.dataset.pid,game,pts);s.hidden=true};
+  const first=s.querySelector('button');first&&first.focus();
 }
-$('#score').addEventListener('click',e=>{const b=e.target.closest('button[data-d]');if(!b)return;const pl=players[+b.dataset.i];pl.p=Math.max(0,pl.p+ +b.dataset.d);store.set('players',players);renderScore()});
-$('#score').addEventListener('input',e=>{if(e.target.dataset.i==null)return;players[+e.target.dataset.i].n=e.target.value;store.set('players',players)});
-$('#addPlayer').onclick=()=>{players.push({n:'Player '+(players.length+1),p:0});store.set('players',players);renderScore()};
-$('#zeroScores').onclick=()=>{players.forEach(p=>p.p=0);store.set('players',players);renderScore()};
 
+function ago(t){const m=Math.round((Date.now()-t)/60000);if(m<1)return 'just now';if(m<60)return m+' min ago';const h=Math.round(m/60);if(h<24)return h+' hr ago';return Math.round(h/24)+' days ago'}
+function renderBoard(){
+  const T=totals(), ranked=[...players].sort((a,b)=>T[b.id]-T[a.id]), top=Math.max(1,...Object.values(T));
+  const games=[...new Set(log.filter(e=>scope!=='trip'||e.trip===trip.id).map(e=>e.g))];
+  const recent=log.filter(e=>scope!=='trip'||e.trip===trip.id).slice(-4).reverse();
+  let extra='';
+  if(boardMode==='games'){extra=games.length?`<div class="tablewrap"><table class="bygame"><thead><tr><th>Game</th>${players.map(p=>`<th>${esc(p.n)}</th>`).join('')}</tr></thead><tbody>${games.map(g=>`<tr><td>${esc(g)}</td>${players.map(p=>{const v=log.filter(e=>e.g===g&&e.pid===p.id&&(scope!=='trip'||e.trip===trip.id)).reduce((a,e)=>a+e.pts,0);return `<td>${v||'·'}</td>`}).join('')}</tr>`).join('')}</tbody></table></div>`:'<p class="note">No points yet. Play a game below and give the winner a point.</p>'}
+  if(boardMode==='edit'){extra=`<div class="travs">${players.map(p=>`<div class="trav" style="grid-template-columns:minmax(0,1fr) auto"><input id="pn-${p.id}" data-pid="${p.id}" aria-label="Player name" value="${esc(p.n)}"><button type="button" class="btn ghost" data-rmp="${p.id}" ${players.length<2?'disabled':''} aria-label="Remove ${esc(p.n)}">Remove</button></div>`).join('')}</div><div class="row"><button type="button" class="btn ghost" id="addP">Add a player</button><button type="button" class="btn" id="doneP">Done</button></div>`}
+  if(boardMode==='newtrip'){extra=`<div class="dyk"><b>Start a new trip?</b>This trip's scores stay in All time, and everyone starts again from 0.</div><div class="row"><button type="button" class="btn" id="yesTrip">Yes, start a new trip</button><button type="button" class="btn ghost" id="noTrip">Cancel</button></div>`}
+  $('#board').innerHTML=`
+   <div class="row" style="justify-content:space-between"><div><h3>Scoreboard</h3><span class="note">${scope==='trip'?`This trip, since ${new Date(trip.start).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}`:'Every trip added up'}</span></div>
+     <div class="seg" role="group" aria-label="Score period" id="scopeSeg"><button data-s="trip" aria-pressed="${scope==='trip'}">This trip</button><button data-s="all" aria-pressed="${scope==='all'}">All time</button></div></div>
+   <ol class="ranks">${ranked.map((p,i)=>`<li class="${i===0&&T[p.id]>0?'lead':''}"><span class="rk">${i+1}</span><span class="nm">${esc(p.n)}${i===0&&T[p.id]>0?' <span class="crown" aria-label="in the lead">♛</span>':''}</span><span class="bar"><i style="width:${T[p.id]/top*100}%"></i></span><span class="tot">${T[p.id]}</span></li>`).join('')}</ol>
+   ${recent.length?`<ul class="recent">${recent.map(e=>`<li><span><b>+${e.pts} ${esc(pname(e.pid))}</b> ${esc(e.g)} · ${ago(e.t)}</span><button type="button" class="linkbtn" data-undo="${e.t}" aria-label="Undo this score">Undo</button></li>`).join('')}</ul>`:''}
+   <div class="row"><button type="button" class="btn ghost" data-mode="games" aria-pressed="${boardMode==='games'}">Scores by game</button><button type="button" class="btn ghost" data-mode="edit">Edit players</button><button type="button" class="btn ghost" data-mode="newtrip">New trip</button></div>
+   ${extra}`;
+}
+$('#board').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.s){scope=b.dataset.s;saveScores();renderBoard();renderStrip();return}
+  if(b.dataset.mode){boardMode=boardMode===b.dataset.mode?'':b.dataset.mode;renderBoard();return}
+  if(b.dataset.undo){const t=+b.dataset.undo;const i=log.findIndex(x=>x.t===t);if(i>-1)log.splice(i,1);saveScores();renderBoard();renderStrip();return}
+  if(b.dataset.rmp){players=players.filter(p=>p.id!==b.dataset.rmp);saveScores();renderBoard();renderStrip();renderGame();return}
+  if(b.id==='addP'){const id='p'+Date.now();players.push({id,n:'Player '+(players.length+1)});saveScores();renderBoard();renderStrip();renderGame();const el=document.getElementById('pn-'+id);el&&el.select();return}
+  if(b.id==='doneP'||b.id==='noTrip'){boardMode='';renderBoard();renderGame();return}
+  if(b.id==='yesTrip'){trip={id:(trip.id||1)+1,start:Date.now()};scope='trip';boardMode='';saveScores();renderBoard();renderStrip();flash('New trip started. Good luck!');return}
+});
+$('#board').addEventListener('input',e=>{const id=e.target.dataset.pid;if(!id)return;const p=players.find(x=>x.id===id);if(p){p.n=e.target.value;saveScores();renderStrip()}});
+function renderStrip(){const T=totals('trip');const r=[...players].sort((a,b)=>T[b.id]-T[a.id]);
+  $('#strip').innerHTML=`<span class="striplabel">This trip</span>`+r.map((p,i)=>`<button type="button" class="stripchip" data-go="games">${i===0&&T[p.id]>0?'♛ ':''}${esc(p.n)} <b>${T[p.id]}</b></button>`).join('')}
+$('#strip').addEventListener('click',e=>{if(e.target.closest('[data-go]'))showTab('games')});
+
+/* ---------- Games ---------- */
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+function bag(list){let b=[];return ()=>{if(!b.length)b=[...list].sort(()=>Math.random()-.5);return b.pop()}}
 const LET='ABCDEFGHJKLMNOPRSTUVWY';
-function newLetters(){$('#letters').textContent=Array.from({length:3},()=>LET[Math.floor(Math.random()*LET.length)]).join('')}
-$('#newLetters').onclick=newLetters;
-
 const WYR=['…have a car that can fly or a car that can swim?','…only eat crisps for a week or only eat croissants for a week?','…be able to talk to cows or to seagulls?','…drive a double-decker bus or a tractor across France?','…sleep in a tent on a mountain or a boat on a lake?','…have a dog that sings or a cat that tells jokes?','…visit the Eiffel Tower or the Colosseum?','…never have to wait in traffic again or never have to stop for the toilet?','…have every car you see be bright pink or have every road be bumpy?','…speak every language in Europe or play every instrument?','…build a sandcastle as big as a house or a snowman as tall as a lorry?','…eat a whole pizza in Italy or a mountain of chips in Belgium?','…have a hot tub in the car or a slide out of the car?','…be a lorry driver for a day or a train driver for a day?','…ride a cable car up an Alp or a ferry across the sea?','…only be able to whisper or only be able to shout for the whole trip?','…have a sat-nav that tells jokes or one that sings directions?','…find a castle in your garden or a waterfall in your bedroom?','…swap places with the driver or with the dog?','…go on a road trip to the North Pole or to the desert?'];
-let wyrBag=[];
-function newWyr(){if(!wyrBag.length)wyrBag=[...WYR].sort(()=>Math.random()-.5);$('#wyr').textContent='Would you rather '+wyrBag.pop()}
-$('#newWyr').onclick=newWyr;
-
-const GAMES=[
- ['I spy','All ages','One person picks something they can see and says “I spy with my little eye something beginning with…”. Everyone guesses. Use colours instead of letters for little ones.'],
- ['Plate hunt','5+','Spot foreign country codes on number plates and stickers. Tick them off on the Spotting tab. Europe trips fill up fast.'],
- ['The alphabet game','6+','Find every letter A to Z in order on signs, lorries and shop fronts. First to Z wins. Q and Z are the tough ones.'],
- ['Twenty questions','6+','Someone thinks of an animal, a place or a person. Everyone else gets twenty yes-or-no questions to work it out.'],
+const FACTS=[
+ ['Octopuses have three hearts.',true,'Two pump blood to the gills and one pumps it round the body.'],
+ ['Bananas grow on trees.',false,'Banana plants are giant herbs. The “trunk” is made of tightly rolled leaves.'],
+ ['Scotland’s national animal is the unicorn.',true,'It has been a symbol of Scotland for hundreds of years.'],
+ ['Goldfish only remember things for three seconds.',false,'Goldfish can remember things for months, and can even be trained.'],
+ ['The Channel Tunnel is the longest tunnel in the world.',false,'The Gotthard Base Tunnel in Switzerland is longer. The Channel Tunnel has the longest stretch under the sea.'],
+ ['A group of flamingos is called a flamboyance.',true,'A very fancy name for a very pink group.'],
+ ['Lightning never strikes the same place twice.',false,'Tall buildings get hit many times a year.'],
+ ['Switzerland has four official languages.',true,'German, French, Italian and Romansh.'],
+ ['Bats are blind.',false,'Bats can see. Many also use echoes to find their way in the dark.'],
+ ['Sharks have been around longer than trees.',true,'Sharks appeared over 400 million years ago, before the first trees.'],
+ ['Mount Everest is in Europe.',false,'It is in Asia, on the border of Nepal and China.'],
+ ['Some German motorways have no speed limit.',true,'Parts of the Autobahn have only a recommended speed of 130 km/h.'],
+ ['Penguins live at the North Pole.',false,'Wild penguins live in the southern half of the world.'],
+ ['Honey kept sealed can last for a very, very long time.',true,'It is so sugary and dry that germs can’t grow in it.'],
+ ['Wombat poo is cube-shaped.',true,'Their guts shape it into little cubes, which don’t roll away.'],
+ ['You can see the Great Wall of China from the Moon with your eyes.',false,'It is far too thin to see from that far away.'],
+ ['Spain is bigger than France.',false,'Mainland France is a bit bigger than mainland Spain.'],
+ ['A day on Venus is longer than its year.',true,'Venus spins so slowly that one turn takes longer than one trip round the Sun.'],
+ ['Tomatoes are a fruit.',true,'They grow from a flower and hold seeds, so scientists call them fruit.'],
+ ['Cars in Ireland drive on the left, like in the UK.',true,'Ireland drives on the left. Most of Europe drives on the right.'],
+ ['Polar bears have white skin.',false,'Their skin is black. Their fur looks white.'],
+ ['The Eiffel Tower was built for a big world fair in 1889.',true,'It was only meant to stand for 20 years.']
+];
+const RIDDLES=[['What has keys but can’t open locks?','A piano'],['What gets wetter the more it dries?','A towel'],['What has a neck but no head?','A bottle'],['What goes up but never comes down?','Your age'],['What has hands but can’t clap?','A clock'],['What can you catch but not throw?','A cold'],['What has one eye but can’t see?','A needle'],['What has lots of teeth but can’t bite?','A comb'],['What runs but never walks, and has a bed but never sleeps?','A river'],['The more you take, the more you leave behind. What are they?','Footsteps'],['What belongs to you, but other people use it more than you do?','Your name'],['What can travel around the world while staying in a corner?','A stamp'],['What has a thumb and four fingers but isn’t alive?','A glove'],['I’m tall when I’m young and short when I’m old. What am I?','A candle'],['What has four wheels and flies?','A bin lorry'],['What has a bottom at the top?','Your legs'],['What can fill a room but takes up no space?','Light'],['Where does today come before yesterday?','In the dictionary']];
+const CATS=['Animals','Countries','Foods','Footballers','Things in a car','Names','Things on a motorway','Cities','Things that are yellow','TV shows or films','Sports','Things in a kitchen','Famous people','Fruit or veg','Jobs','Things at the beach','Sweets and snacks','Things that fly'];
+const QLET='ABCDEFGHIJKLMNOPRSTW';
+const TWENTY=['an animal','a famous person','a place','something in the car','a food','a cartoon character','something you can see out of the window','a job'];
+const STORY=[['A lorry full of','talking cabbages'],['On the ferry, a seagull stole','the car keys'],['At the services, the toilet door opened into','a secret castle'],['The sat-nav suddenly said','“Turn left into the sea”'],['A cow in a field held up a sign saying','“Help!”'],['The tunnel went on and on until it came out','on the Moon'],['Grandma’s caravan came loose and rolled all the way to','Paris'],['The car started to float when','somebody sneezed']];
+const nextWyr=bag(WYR), nextFact=bag(FACTS), nextRiddle=bag(RIDDLES), nextStory=bag(STORY);
+const GAMELIST=[
+ {id:'fact',n:'Fact or Fib',d:'True or made up?',age:'5+'},
+ {id:'riddle',n:'Riddles',d:'Brain teasers',age:'5+'},
+ {id:'quick',n:'Quick-fire',d:'Letter, topic, 30 seconds',age:'7+'},
+ {id:'plates',n:'Plate phrases',d:'Three letters, one funny phrase',age:'6+'},
+ {id:'twenty',n:'20 Questions',d:'Yes or no only',age:'6+'},
+ {id:'alpha',n:'Alphabet race',d:'A to Z on signs',age:'6+'},
+ {id:'story',n:'Story chain',d:'Silly story starters',age:'4+'},
+ {id:'wyr',n:'Would you rather',d:'Pick one, explain why',age:'4+'}
+];
+let gstate=Object.assign({cur:'fact'},store.get('gstate',{}));
+let timer=null;
+function saveG(){store.set('gstate',gstate)}
+function renderTiles(){$('#tiles').innerHTML=GAMELIST.map(g=>`<button type="button" class="tile" data-g="${g.id}" aria-pressed="${gstate.cur===g.id}"><b>${esc(g.n)}</b><span>${esc(g.d)}</span><small>${g.age}</small></button>`).join('')}
+$('#tiles').addEventListener('click',e=>{const b=e.target.closest('[data-g]');if(!b)return;gstate.cur=b.dataset.g;saveG();renderTiles();renderGame();$('#gamebox').scrollIntoView({behavior:'smooth',block:'start'})});
+function renderGame(){
+  clearInterval(timer);timer=null;
+  const g=GAMELIST.find(x=>x.id===gstate.cur)||GAMELIST[0], box=$('#gamebox');
+  let body='';
+  if(g.id==='fact'){if(!gstate.fact)gstate.fact=nextFact();const [s,t,w]=gstate.fact;
+    body=`<p class="note">Read it out. Everyone shouts “Fact!” or “Fib!”, then reveal.</p><div class="bigcall">${esc(s)}</div>
+    ${gstate.factShown?`<div class="dyk"><b>${t?'Fact!':'Fib!'}</b>${esc(w)}</div>${giveRow('Fact or Fib',1,'Right answer? Give a point to')}`:''}
+    <div class="row">${gstate.factShown?'':'<button class="btn" data-act="reveal">Reveal</button>'}<button class="btn ${gstate.factShown?'':'ghost'}" data-act="nextfact">Next one</button></div>`}
+  if(g.id==='riddle'){if(!gstate.riddle)gstate.riddle=nextRiddle();const [q,a]=gstate.riddle;
+    body=`<div class="bigcall">${esc(q)}</div>${gstate.riddleShown?`<div class="dyk"><b>Answer</b>${esc(a)}</div>${giveRow('Riddles',1,'Who got it?')}`:''}
+    <div class="row">${gstate.riddleShown?'':'<button class="btn" data-act="reveal">Show the answer</button>'}<button class="btn ${gstate.riddleShown?'':'ghost'}" data-act="nextriddle">Next riddle</button></div>`}
+  if(g.id==='quick'){if(!gstate.quick)gstate.quick=[rnd(QLET),rnd(CATS)];const [L,C]=gstate.quick;
+    body=`<p class="note">Take turns, or all shout at once: name as many as you can in 30 seconds. Most answers wins.</p>
+    <div class="quick"><span class="qletter">${L}</span><div><span class="eyebrow">Topic</span><div class="bigcall" style="min-height:0">${esc(C)}</div></div></div>
+    <div class="timer" id="timer" aria-live="polite">30</div>
+    <div class="row"><button class="btn" data-act="start">Start the clock</button><button class="btn ghost" data-act="nextquick">New letter and topic</button></div>${giveRow('Quick-fire',1,'Winner')}`}
+  if(g.id==='plates'){if(!gstate.plate)gstate.plate=Array.from({length:3},()=>rnd(LET)).join('');
+    body=`<p class="note">Make a phrase from the three letters, in order. KLM could be “Kind Llamas Munch”. The funniest answer wins.</p>
+    <div class="lettersplate" aria-live="polite"><span class="code">UK</span><span class="txt">${gstate.plate}</span></div>
+    <div class="row"><button class="btn" data-act="nextplate">New letters</button></div>${giveRow('Plate phrases',1,'Funniest answer')}`}
+  if(g.id==='twenty'){if(!gstate.tw)gstate.tw={what:rnd(TWENTY),n:0};const tw=gstate.tw;
+    body=`<p class="note">The thinker picks <b>${esc(tw.what)}</b> and keeps it secret. Everyone else asks yes-or-no questions. Tap after each question.</p>
+    <div class="timer">${20-tw.n}<small>questions left</small></div>
+    <div class="row"><button class="btn" data-act="ask" ${tw.n>=20?'disabled':''}>Asked one</button><button class="btn ghost" data-act="newtwenty">New round</button></div>
+    ${tw.n>=20?'<div class="dyk"><b>Stumped!</b>The thinker wins this round.</div>':''}
+    ${giveRow('20 Questions',2,tw.n>=20?'Give the thinker 2 points':'Guessed it? Give 2 points to')}`}
+  if(g.id==='alpha'){const got=gstate.alpha||0;const A='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    body=`<p class="note">Find each letter in order on signs, lorries and shop fronts. Tap the next letter when someone spots it. Team game: race to Z before you arrive.</p>
+    <div class="alpha">${[...A].map((c,i)=>`<span class="${i<got?'on':i===got?'next':''}">${c}</span>`).join('')}</div>
+    ${got>=26?'<div class="dyk"><b>A to Z done!</b>Who spotted the Z?</div>'+giveRow('Alphabet race',3,'Give 3 points to'):`<div class="row"><button class="btn" data-act="alpha">Found ${A[got]}!</button><button class="btn ghost" data-act="alphaback" ${got?'':'disabled'}>Undo</button></div>`}
+    <div class="row"><button class="btn ghost" data-act="alphareset">Start again</button></div>`}
+  if(g.id==='story'){if(!gstate.story)gstate.story=nextStory();const [a,b]=gstate.story;
+    body=`<p class="note">Read the start, then go round the car adding one sentence each. Bonus if you work in something you can see out of the window.</p>
+    <div class="bigcall">${esc(a)} ${esc(b)}…</div>
+    <div class="row"><button class="btn" data-act="nextstory">Another starter</button></div>${giveRow('Story chain',1,'Best sentence')}`}
+  if(g.id==='wyr'){if(!gstate.wyr)gstate.wyr=nextWyr();
+    body=`<p class="note">Everyone picks one and says why. No wrong answers.</p><div class="bigcall">Would you rather ${esc(gstate.wyr)}</div>
+    <div class="row"><button class="btn" data-act="nextwyr">Another one</button></div>${giveRow('Would you rather',1,'Best reason')}`}
+  saveG();
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><h3 class="gtitle">${esc(g.n)}</h3><span class="age">${g.age}</span></div>${body}`;
+  renderClassic();
+}
+$('#gamebox').addEventListener('click',e=>{
+  const b=e.target.closest('[data-act]');if(!b)return;const a=b.dataset.act;
+  if(a==='reveal'){if(gstate.cur==='fact')gstate.factShown=1;else gstate.riddleShown=1}
+  if(a==='nextfact'){gstate.fact=nextFact();gstate.factShown=0}
+  if(a==='nextriddle'){gstate.riddle=nextRiddle();gstate.riddleShown=0}
+  if(a==='nextquick')gstate.quick=null;
+  if(a==='nextplate')gstate.plate=null;
+  if(a==='ask')gstate.tw.n=Math.min(20,gstate.tw.n+1);
+  if(a==='newtwenty')gstate.tw=null;
+  if(a==='alpha')gstate.alpha=Math.min(26,(gstate.alpha||0)+1);
+  if(a==='alphaback')gstate.alpha=Math.max(0,(gstate.alpha||0)-1);
+  if(a==='alphareset')gstate.alpha=0;
+  if(a==='nextstory')gstate.story=nextStory();
+  if(a==='nextwyr')gstate.wyr=nextWyr();
+  if(a==='start'){let n=30;const el=$('#timer');b.disabled=true;el.textContent=n;el.classList.remove('done');clearInterval(timer);
+    timer=setInterval(()=>{n--;el.textContent=n>0?n:'Time!';if(n<=0){clearInterval(timer);timer=null;el.classList.add('done');b.disabled=false}},1000);return}
+  renderGame();
+});
+const CLASSIC=[
+ ['I spy','All ages','One person picks something they can see and says “I spy with my little eye something beginning with…”. Use colours instead of letters for little ones.'],
  ['Car cricket','7+','Each player bats in turn. Every car scores a run, a red car is a four, a lorry is a six. A pub with legs in its name (King’s Arms, Red Lion) means you’re out.'],
  ['Who am I?','7+','Think of someone famous or someone in the family. Others ask yes-or-no questions. Fewest questions wins.'],
  ['Count the cows','All ages','Two teams, one each side of the car. Count cows on your side. Pass a church or graveyard on your side and you lose all your cows.'],
  ['The minister’s cat','7+','Go round the car: “The minister’s cat is an angry cat”, then “…a brave cat”, working through the alphabet. Miss your turn and you’re out.'],
- ['Story chain','5+','Each person adds one sentence to a story. Bonus point for working in something you can see out of the window.'],
  ['Guess the distance','8+','When a sign shows the distance to a town, everyone guesses how many minutes until you reach it. Closest wins a point.'],
  ['Border bets','All ages','On European trips, guess the time you’ll cross each border, and the first thing you’ll spot in the new country.'],
  ['Hum that tune','All ages','One person hums a song, the rest guess. Film and TV themes work well.'],
+ ['Yellow car','All ages','First to shout “Yellow car!” when one goes past gets a point. No shouting at parked cars.'],
+ ['Fortunately, unfortunately','6+','Take turns: “Fortunately we found a picnic…” “Unfortunately it was full of ants…”. Keep it going as long as you can.']
 ];
-$('#gameCards').innerHTML=GAMES.map(([n,a,r])=>`<div class="card"><div class="row" style="justify-content:space-between"><h3>${esc(n)}</h3><span class="age">${esc(a)}</span></div><p>${esc(r)}</p></div>`).join('');
+function renderClassic(){$('#gameCards').innerHTML=CLASSIC.map(([n,a,r])=>`<div class="card"><div class="row" style="justify-content:space-between"><h3>${esc(n)}</h3><span class="age">${esc(a)}</span></div><p>${esc(r)}</p>${giveRow(n,1,'Point to')}</div>`).join('');}
 
 /* ---------- Bingo ---------- */
 const POOLS={
@@ -573,15 +765,16 @@ const advKey=()=>String(adv.id||'example');
 function lines(){const L=[];for(let i=0;i<4;i++){L.push([0,1,2,3].map(j=>i*4+j));L.push([0,1,2,3].map(j=>j*4+i))}L.push([0,5,10,15],[3,6,9,12]);return L}
 function newCard(){const p=[...poolItems(pool).keys()].sort(()=>Math.random()-.5).slice(0,16);card={pool,ids:p,adv:advKey()};marks=[];store.set('card',card);store.set('marks',marks);renderBingo()}
 function renderBingo(){
-  document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.pool===pool));
+  document.querySelectorAll('#poolSeg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.pool===pool));
   if(!card||card.pool!==pool||(pool==='route'&&card.adv!==advKey())){newCard();return}
   const win=lines().some(l=>l.every(i=>marks.includes(i)));
   const el=$('#bingo');el.classList.toggle('win',win);
   el.innerHTML=card.ids.map((id,i)=>{const [em,t]=poolItems(pool)[id];return `<button aria-pressed="${marks.includes(i)}" data-i="${i}">${em?`<span class="em" aria-hidden="true">${em}</span>`:''}<span>${esc(t)}</span></button>`}).join('');
   $('#bingoMsg').textContent=win?'Bingo! Shout it out.':marks.length?`${marks.length} spotted`:'';
 }
-$('#bingo').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;marks=marks.includes(i)?marks.filter(x=>x!==i):[...marks,i];store.set('marks',marks);renderBingo()});
-document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>{pool=b.dataset.pool;store.set('pool',pool);renderBingo()});
+const isWin=()=>lines().some(l=>l.every(i=>marks.includes(i)));
+$('#bingo').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;const was=isWin();marks=marks.includes(i)?marks.filter(x=>x!==i):[...marks,i];store.set('marks',marks);renderBingo();if(!was&&isWin())askWho('Bingo',10)});
+document.querySelectorAll('#poolSeg button').forEach(b=>b.onclick=()=>{pool=b.dataset.pool;store.set('pool',pool);renderBingo()});
 $('#newCard').onclick=newCard;
 
 const HUNT=[['UK','United Kingdom'],['IRL','Ireland'],['F','France'],['B','Belgium'],['NL','Netherlands'],['L','Luxembourg'],['D','Germany'],['CH','Switzerland'],['FL','Liechtenstein'],['A','Austria'],['I','Italy'],['RSM','San Marino'],['MC','Monaco'],['AND','Andorra'],['E','Spain'],['P','Portugal'],['DK','Denmark'],['N','Norway'],['S','Sweden'],['FIN','Finland'],['IS','Iceland'],['PL','Poland'],['CZ','Czechia'],['SK','Slovakia'],['H','Hungary'],['SLO','Slovenia'],['HR','Croatia'],['BIH','Bosnia'],['SRB','Serbia'],['MNE','Montenegro'],['AL','Albania'],['NMK','N. Macedonia'],['GR','Greece'],['BG','Bulgaria'],['RO','Romania'],['MD','Moldova'],['UA','Ukraine'],['LT','Lithuania'],['LV','Latvia'],['EST','Estonia'],['TR','Turkey'],['CY','Cyprus'],['M','Malta'],['GBM','Isle of Man'],['GBJ','Jersey'],['GBG','Guernsey']];
@@ -590,7 +783,7 @@ function renderHunt(){
   $('#hunt').innerHTML=HUNT.map(([c,n])=>`<button class="plate" aria-pressed="${hunt.includes(c)}" data-c="${c}"><span class="code">${c}</span><span class="nm">${esc(n)}</span></button>`).join('');
   $('#huntCount').textContent=`${hunt.length} / ${HUNT.length}`;
 }
-$('#hunt').addEventListener('click',e=>{const b=e.target.closest('.plate');if(!b)return;const c=b.dataset.c;hunt=hunt.includes(c)?hunt.filter(x=>x!==c):[...hunt,c];store.set('hunt',hunt);renderHunt()});
+$('#hunt').addEventListener('click',e=>{const b=e.target.closest('.plate');if(!b)return;const c=b.dataset.c;const add=!hunt.includes(c);hunt=add?[...hunt,c]:hunt.filter(x=>x!==c);if(add)setTimeout(()=>askWho('Plate hunt ('+c+')',2),0);store.set('hunt',hunt);renderHunt()});
 $('#resetHunt').onclick=()=>{hunt=[];store.set('hunt',hunt);renderHunt()};
 
 /* ---------- Journey ---------- */
@@ -723,7 +916,7 @@ function viewSpot(){
   $('#jView').innerHTML=card+list;
   const go=n=>{prog.stop=Math.max(0,Math.min(S.length,n));saveJ();viewSpot()};
   $('#sReveal')&&($('#sReveal').onclick=()=>{prog.revealed[i]=1;saveJ();viewSpot()});
-  $('#sSeen')&&($('#sSeen').onclick=()=>{prog.revealed[i]=1;prog.stop=i+1;if(prog.done[i]!=='seen'){prog.done[i]='seen';addPoints(10)}saveJ();renderJourney()});
+  $('#sSeen')&&($('#sSeen').onclick=()=>{prog.revealed[i]=1;prog.stop=i+1;if(prog.done[i]!=='seen'){prog.done[i]='seen';addPoints(10);askWho('Landmark: '+S[i].name,10)}saveJ();renderJourney()});
   $('#sMiss')&&($('#sMiss').onclick=()=>{prog.stop=i+1;if(prog.done[i]==='seen')addPoints(-10);prog.done[i]='missed';saveJ();renderJourney()});
   $('#sBack')&&($('#sBack').onclick=()=>go(i-1));
   $('#jView .stoplist').onclick=e=>{const b=e.target.closest('button');if(b)go(+b.dataset.j)};
@@ -745,7 +938,7 @@ function viewQuiz(){
     ${a!=null?`<div class="dyk"><b>${a===q.answer?'Correct! +5':'Not quite'}</b>${esc(q.why||'')}</div>`:''}
     <div class="row">${qi>0?'<button class="btn ghost" id="qPrev">Previous</button>':''}${qi<list.length-1?'<button class="btn" id="qNext">Next question</button>':''}</div>
    </div>`;
-   $('#jView .qopts').onclick=e=>{const b=e.target.closest('button');if(!b||a!=null)return;const k=+b.dataset.k;prog.quiz[q.i]=k;if(k===q.answer){addPoints(5);renderJourney()}else{saveJ();viewQuiz()}};
+   $('#jView .qopts').onclick=e=>{const b=e.target.closest('button');if(!b||a!=null)return;const k=+b.dataset.k;prog.quiz[q.i]=k;if(k===q.answer){addPoints(5);askWho('Route quiz',5);renderJourney()}else{saveJ();viewQuiz()}};
    $('#qPrev')&&($('#qPrev').onclick=()=>{prog.qi=qi-1;saveJ();viewQuiz()});
    $('#qNext')&&($('#qNext').onclick=()=>{prog.qi=qi+1;saveJ();viewQuiz()});
   }
@@ -754,7 +947,7 @@ function viewQuiz(){
 function viewIspy(){
   const L=adv.ispy||[];
   $('#jView').innerHTML=`<div class="panel" style="display:grid;gap:10px"><h3>Spot these on the way</h3><ul class="ispy">${L.map((t,i)=>{const on=prog.ispy.includes(i);return `<li><button data-i="${i}" aria-pressed="${on}"><span class="box">${on?'✓':''}</span><span>${esc(t)}</span><span class="pt">+5</span></button></li>`}).join('')}</ul></div>`;
-  $('#jView .ispy').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;if(prog.ispy.includes(i)){prog.ispy=prog.ispy.filter(x=>x!==i);addPoints(-5)}else{prog.ispy.push(i);addPoints(5)}renderJourney()};
+  $('#jView .ispy').onclick=e=>{const b=e.target.closest('button');if(!b)return;const i=+b.dataset.i;if(prog.ispy.includes(i)){prog.ispy=prog.ispy.filter(x=>x!==i);addPoints(-5)}else{prog.ispy.push(i);addPoints(5);askWho('I-spy',5)}renderJourney()};
 }
 function viewSay(){
   $('#jView').innerHTML=`<div class="panel" style="display:grid;gap:10px"><h3>Say it like a local</h3><p class="note" style="margin:0">Practise these before you arrive. Whoever uses one first in a shop or café gets a point on the scoreboard.</p><div class="phr">${adv.phrases.map(([l,e])=>`<div><b>${esc(l)}</b><span>${esc(e)}</span></div>`).join('')}</div></div>`;
@@ -827,7 +1020,7 @@ Give 8 to 12 stops in the order you reach them, 12 quiz questions spread across 
 });
 
 /* ---------- Boot ---------- */
-renderJourney();renderPlan();renderRoute();renderChecklist();renderClist();renderCountry();renderScore();newLetters();newWyr();renderBingo();renderHunt();
+renderJourney();renderPlan();renderRoute();renderChecklist();renderClist();renderCountry();renderBoard();renderStrip();renderTiles();renderGame();renderBingo();renderHunt();
 </script>
 
 <script>if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}))}</script>
